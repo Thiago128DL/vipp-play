@@ -49,6 +49,7 @@ footer a{color:var(--lime);cursor:pointer}
 .tag{background:var(--pink);color:#15132b;border-radius:6px;padding:0 6px;font-size:.8rem}
 #modal,#sm,#tm{position:fixed;inset:0;background:#000a;z-index:20;display:grid;place-items:center;padding:16px}
 #modal div,#sm div,#tm div{width:min(440px,100%);background:var(--panel);border-radius:var(--r);padding:20px;max-width:440px}
+#callbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 14px;background:var(--panel);border-top:2px solid var(--line)}#callbar small{color:var(--pink)}
 @media (prefers-reduced-motion:no-preference){#panel>div{animation:up .2s ease-out}@keyframes up{from{transform:translateY(30px)}}}
 </style>
 </head>
@@ -63,6 +64,7 @@ footer a{color:var(--lime);cursor:pointer}
     <input id="email" type="email" placeholder="Correo (Gmail u otro)" autocomplete="email" required>
     <input id="pass" type="password" placeholder="Contraseña (mínimo 8)" autocomplete="current-password" minlength="8" required>
     <label class="chk"><input type="checkbox" id="acepto" required><span>Acepto los <a href="#" id="verT">términos y condiciones</a></span></label>
+    <label class="chk"><input type="checkbox" id="mayor" required><span>Acepto que soy mayor de edad (18 años o más)</span></label>
     <button class="go" id="enviar">Entrar</button>
     <div id="amsg" class="msgbox" role="status"></div>
   </form>
@@ -76,7 +78,8 @@ footer a{color:var(--lime);cursor:pointer}
   <div id="tools"><button id="bBuscar">🔍 Buscar</button><button id="bRank">🏆 Ranking</button><button id="bEv">📅 Eventos</button><button id="bGuia">📚 Guías</button><button id="bSala" class="hide">⚙️ Mi sala</button><button id="bAyuda" class="bad">🆘 Ayuda</button></div>
   <div id="msgs" aria-live="polite"></div>
   <div>
-    <form id="send"><input id="txt" placeholder="Escribe un mensaje…" maxlength="500" autocomplete="off"><button class="go">Enviar</button></form>
+    <div id="callbar" class="hide"></div>
+    <form id="send"><input id="txt" placeholder="Escribe un mensaje…" maxlength="500" autocomplete="off"><button type="button" id="mic" class="hide" title="Mensaje de voz (máx. 60 s)">🎤</button><button type="button" id="micX" class="hide" title="Cancelar">✖</button><button class="go">Enviar</button></form>
     <footer><span id="smsg" style="color:var(--pink)"></span> Sé amable y no compartas datos personales. <a id="priv2">Privacidad</a></footer>
   </div>
 </div>
@@ -95,20 +98,23 @@ footer a{color:var(--lime);cursor:pointer}
 <div id="tm" class="hide"><div style="max-height:85dvh;overflow-y:auto">
   <h3>Términos y condiciones</h3>
   <ol style="padding-left:20px;font-size:.95rem">
-    <li>Si eres menor de edad, necesitas el permiso de tu madre, padre o tutor para usar esta página.</li>
+    <li>Esta página es solo para personas de 18 años o más. Al crear tu cuenta declaras que lo eres. Si descubrimos que no, podemos suspender o eliminar tu cuenta.</li>
     <li>La página aplica medidas de seguridad: correo verificado, contraseñas cifradas y moderación. Al usarla aceptas hacerlo de buena fe y cuidar tu contraseña sin compartirla.</li>
-    <li>Las salas privadas son solo para quienes tengan el apodo del creador y la contraseña de la sala. Nadie más puede entrar. La única excepción son los moderadores y administradores, que pueden acceder a todas las salas y leer sus mensajes para hacer cumplir estas reglas y la ley. Aceptas esto al usar las salas.</li>
+    <li>Las salas privadas son solo para quienes tengan el apodo del creador y la contraseña de la sala. Nadie más puede entrar. La única excepción son los moderadores y administradores, que pueden acceder a todas las salas, leer sus mensajes y escuchar sus mensajes de voz para hacer cumplir estas reglas y la ley. Aceptas esto al usar las salas.</li>
+    <li>Las llamadas de voz de las salas privadas no se graban y los moderadores no pueden escucharlas. Si pasa algo, usa el botón ⚑ Reportar durante la llamada. Las llamadas conectan directamente a los participantes entre sí, por lo que los demás participantes podrían ver tu dirección IP.</li>
+    <li>Las cuentas nuevas deben ser aprobadas por un moderador antes de poder entrar.</li>
+    <li>Donar es voluntario y no cambia las reglas. Aparecer en la tabla de donantes es opcional.</li>
     <li>Está prohibido: acoso, insultos, odio, amenazas, contenido sexual o violento, estafas, spam, hacerse pasar por otra persona y compartir datos personales (tuyos o de otros).</li>
     <li>Los mensajes borrados pueden conservarse y entregarse a las autoridades si la ley lo exige.</li>
     <li>Si incumples las reglas, podemos darte avisos (3 avisos suspenden la cuenta), silenciarte por un tiempo, borrar tus mensajes o eliminar tu cuenta. Los mensajes pueden ser analizados automáticamente para detectar conductas de riesgo.</li>
-    <li>Guardamos tu correo, apodo y mensajes. Tu correo nunca se muestra a otros usuarios. Si borras tu cuenta, tus mensajes se conservan sin tu apodo para fines de moderación y seguridad.</li>
+    <li>Guardamos tu correo, apodo, mensajes y mensajes de voz. Tu correo nunca se muestra a otros usuarios. Si borras tu cuenta, tus mensajes se conservan sin tu apodo para fines de moderación y seguridad.</li>
     <li>Esta página es independiente y no está afiliada a Roblox, Minecraft ni Fortnite.</li>
   </ol>
   <button class="go" id="cierraT">Cerrar</button>
 </div></div>
 <div id="modal" class="hide"><div>
   <h3>Política de privacidad</h3>
-  <p>Solo guardamos tu correo, tu apodo y tus mensajes. El correo nunca se muestra a otros usuarios. Un administrador puede borrar mensajes y suspender cuentas que rompan las reglas. Las salas privadas se protegen con contraseña, pero los moderadores y administradores pueden revisarlas para moderar y cumplir la ley. Para borrar tu cuenta, escríbenos desde tu correo registrado.</p>
+  <p>Solo guardamos tu correo, tu apodo, tus mensajes y tus mensajes de voz (solo existen en salas privadas). El correo nunca se muestra a otros usuarios. Un administrador puede borrar mensajes y suspender cuentas que rompan las reglas. Las salas privadas se protegen con contraseña, pero los moderadores y administradores pueden revisarlas para moderar y cumplir la ley. Si donas y eliges aparecer, tu apodo se muestra en la tabla de donantes (y el monto solo si lo permites). Para borrar tu cuenta, escríbenos desde tu correo registrado.</p>
   <button class="go" id="cierra">Entendido</button>
 </div></div>
 
@@ -120,6 +126,8 @@ const SUPABASE_KEY = 'sb_publishable_7grGC0aSiWrZ3D_wGUV69A_wxyy78Ct';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const $ = id => document.getElementById(id);
 const TERMINOS_V = '2026-11';
+const ALIAS_APOYO = '';   // pega aquí tu alias de Mercado Pago (déjalo vacío para ocultarlo)
+const LINK_APOYO = 'https://cafecito.app/vipp-play';   // pega aquí tu link de Cafecito / Ko-fi / Mercado Pago (déjalo vacío para ocultar el botón)
 let bloq = new Set(), catsList = [], salasInfo = {}, mant = false;
 let me = null, act = {}, canal = null, modoReg = false, beat = null;
 
@@ -140,24 +148,29 @@ $('f').onsubmit = async e => {
     if (/(idiota|puto|puta|mierda|nazi)/i.test(apodo)) return m.textContent = 'Elige otro apodo.';
     const { data: libre } = await sb.rpc('apodo_libre', { a: apodo });
     if (!libre) return m.textContent = 'Ese apodo ya está en uso.';
-    const { error } = await sb.auth.signUp({ email, password, options: { data: { apodo, terminos: true } } });
+    const { error } = await sb.auth.signUp({ email, password, options: { data: { apodo, terminos: true, mayor: true } } });
     if (error) return m.textContent = error.message;
-    m.className = 'msgbox ok'; m.textContent = 'Listo. Revisa tu correo y confirma tu cuenta para entrar.';
+    m.className = 'msgbox ok'; m.textContent = 'Listo. Revisa tu correo y confirma tu cuenta. Después un moderador tiene que aprobarla para que puedas entrar.';
   } else {
     const { error } = await sb.auth.signInWithPassword({ email, password });
     if (error) return m.textContent = error.message.includes('not confirmed') ? 'Confirma tu correo primero.' : 'Correo o contraseña incorrectos.';
-    iniciar($('acepto').checked);
+    iniciar($('acepto').checked, $('mayor').checked);
   }
 };
 
-async function iniciar(acepta){
+async function iniciar(acepta, mayor){
   const { data: { user } } = await sb.auth.getUser(); if (!user) return;
   const { data: p } = await sb.from('perfiles').select('*').eq('id', user.id).single();
   if (!p) return;
   if (p.baneado) { await sb.auth.signOut(); modo(false); $('amsg').textContent = 'Tu cuenta está suspendida. Motivo: ' + (p.motivo_ban || 'sin especificar'); return; }
+  if (!p.aprobado && !p.es_admin && !p.es_moderador) { await sb.auth.signOut(); modo(false); $('amsg').textContent = 'Tu cuenta está pendiente de aprobación. Un moderador la revisará pronto.'; return; }
   if (!p.acepto_terminos) {
     if (!acepta) { await sb.auth.signOut(); modo(false); $('amsg').textContent = 'Inicia sesión y acepta los términos y condiciones para entrar.'; return; }
     await sb.rpc('aceptar_terminos', { v: TERMINOS_V }); p.acepto_terminos = new Date().toISOString();
+  }
+  if (!p.mayor_edad) {
+    if (!mayor) { await sb.auth.signOut(); modo(false); $('amsg').textContent = 'Inicia sesión y confirma que eres mayor de edad para entrar.'; return; }
+    await sb.rpc('declarar_mayor'); p.mayor_edad = new Date().toISOString();
   }
   me = p; me.email = user.email; $('auth').classList.add('hide'); $('app').classList.remove('hide'); $('yo').textContent = p.apodo;
   $('adminBtn').classList.toggle('hide', !(p.es_admin || p.es_moderador)); $('adminBtn').textContent = p.es_admin ? '🛡️ Admin' : '🛡️ Moderar';
@@ -179,13 +192,16 @@ function pintar(m){
   if (me.es_admin || me.es_moderador) d.append(btn('🗑', 'x', () => borrar(m.id)));
   else if (m.user_id !== me.id) d.append(btn('⚑', 'x', () => reportar(m.id)), btn('🚫', 'x', () => bloquear(m.user_id, m.apodo)));
   d.append(el('b', '', (m.avatar || '🙂') + ' ' + m.apodo), el('small', '', hora(m.creado)), el('div', '', m.texto));
+  if (m.audio_path) d.append(audioBtn(m.audio_path));
   const rx = el('div', 'rx'); rx.dataset.id = m.id;
   ['👍','😂','❤️','🔥'].forEach(e => { const b = btn(e, 'r', () => reaccionar(m.id, e)); b.dataset.e = e; rx.append(b); });
   d.append(rx);
   $('msgs').append(d); $('msgs').scrollTop = 1e9;
 }
 async function irA(t, id, ro){
-  act = { t, id, ro }; $('send').classList.toggle('hide', !!ro); $('bSala').classList.toggle('hide', !(t === 'sala' && !ro && salasInfo[id]?.creador_apodo === me.apodo)); document.querySelectorAll('#cats button,#salas button').forEach(b => b.classList.toggle('on', b.dataset.k === t + id));
+  if (rec) rec.cancelar();
+  act = { t, id, ro }; $('mic').classList.toggle('hide', t !== 'sala' || !!ro);
+  if (t === 'sala' && !ro) mirarLlamada(id); else if (call && !call.dentro) cerrarCanalLlamada(); else pintarBarra(); $('send').classList.toggle('hide', !!ro); $('bSala').classList.toggle('hide', !(t === 'sala' && !ro && salasInfo[id]?.creador_apodo === me.apodo)); document.querySelectorAll('#cats button,#salas button').forEach(b => b.classList.toggle('on', b.dataset.k === t + id));
   const col = t === 'cat' ? 'categoria' : 'sala_id';
   $('msgs').replaceChildren();
   const { data } = await sb.from('mensajes').select('*').eq(col, id).eq('eliminado', false).order('creado', { ascending: false }).limit(60);
@@ -251,15 +267,43 @@ async function banear(u, ban){
   await sb.from('perfiles').update({ baneado: ban, motivo_ban: motivo }).eq('id', u.id);
   await log(ban ? 'banear' : 'desbanear', '@' + u.apodo, motivo || ''); tab('usuarios');
 }
-$('adminBtn').onclick = () => { $('panel').classList.remove('hide'); tab(me.es_admin ? 'activos' : 'mensajes'); };
+$('adminBtn').onclick = () => { $('panel').classList.remove('hide'); tab('pendientes'); };
 $('panel').onclick = e => { if (e.target.id === 'panel') $('panel').classList.add('hide'); };
 
 async function tab(t){
   const body = $('pbody'); const bar = el('div', 'tabs');
-  [['activos','Activos'],['usuarios','Usuarios'],['salas','Salas'],['mensajes','Mensajes'],['reportes','Reportes'],['historial','Historial'],['stats','Estadísticas'],['anuncios','Anuncios'],['contenido','Contenido']].filter(([k]) => me.es_admin || ['salas','mensajes','reportes'].includes(k))
+  [['pendientes','Pendientes'],['activos','Activos'],['usuarios','Usuarios'],['salas','Salas'],['mensajes','Mensajes'],['reportes','Reportes'],['historial','Historial'],['stats','Estadísticas'],['anuncios','Anuncios'],['contenido','Contenido'],['donaciones','Donaciones']].filter(([k]) => me.es_admin || ['pendientes','salas','mensajes','reportes'].includes(k))
     .forEach(([k, n]) => bar.append(btn(n, k === t ? 'on' : '', () => tab(k))));
   body.replaceChildren(el('h2', '', 'Panel de administración'), bar);
   const lista = el('div'); body.append(lista);
+  if (t === 'donaciones') {
+    const f = el('form'); f.style.cssText = 'display:grid;gap:6px;margin:10px 0';
+    const ap = el('input'); ap.placeholder = 'Apodo del donante'; ap.required = true; ap.maxLength = 17;
+    const mo = el('input'); mo.type = 'number'; mo.placeholder = 'Monto (pesos)'; mo.min = '1'; mo.step = '0.01'; mo.required = true;
+    const l1 = el('label', 'chk'), v = el('input'); v.type = 'checkbox'; v.checked = true; l1.append(v, el('span', '', 'Aparece en la tabla de donantes'));
+    const l2 = el('label', 'chk'), mm = el('input'); mm.type = 'checkbox'; l2.append(mm, el('span', '', 'Mostrar el monto'));
+    f.append(ap, mo, l1, l2, el('button', 'go', 'Registrar donación'));
+    f.onsubmit = async e => { e.preventDefault();
+      const { error } = await sb.rpc('registrar_donacion', { ap: ap.value.trim().replace(/^@/, ''), monto: +mo.value, vis: v.checked, ver: mm.checked });
+      if (error) return alert(error.message);
+      await log('donacion', '@' + ap.value.trim().replace(/^@/, ''), '$' + mo.value); tab('donaciones'); };
+    lista.append(f);
+    const { data } = await sb.from('donaciones').select('id, monto, creado, perfiles(apodo)').order('creado', { ascending: false }).limit(50);
+    if (!data?.length) lista.append(el('p', '', 'Todavía no registraste donaciones.'));
+    (data || []).forEach(d => { const r = el('div', 'row'); const sp = el('span', '', '@' + (d.perfiles?.apodo || '?') + ' · $' + Number(d.monto).toLocaleString('es-AR'));
+      sp.append(el('small', '', new Date(d.creado).toLocaleString('es')));
+      r.append(sp, btn('Borrar', 'bad', async () => { if (!confirm('¿Borrar esta donación?')) return; await sb.from('donaciones').delete().eq('id', d.id); tab('donaciones'); })); lista.append(r); });
+  }
+  if (t === 'pendientes') {
+    const { data, error } = await sb.rpc('cuentas_pendientes');
+    if (error || !data?.length) lista.append(el('p', '', 'No hay cuentas pendientes.'));
+    (data || []).forEach(u => { const r = el('div', 'row'); const sp = el('span', '', '@' + u.apodo);
+      sp.append(el('small', '', 'Se registró el ' + new Date(u.creado).toLocaleString('es')));
+      r.append(sp,
+        btn('Aprobar', 'go', async () => { await sb.rpc('aprobar_cuenta', { u: u.id, ok: true }); await log('aprobar', '@' + u.apodo, ''); tab('pendientes'); }),
+        btn('Rechazar', 'bad', async () => { if (!confirm('¿Rechazar a @' + u.apodo + '? Su cuenta quedará suspendida.')) return; await sb.rpc('aprobar_cuenta', { u: u.id, ok: false }); await log('rechazar', '@' + u.apodo, ''); tab('pendientes'); }));
+      lista.append(r); });
+  }
   if (t === 'activos') {
     const desde = new Date(Date.now() - 5 * 60000).toISOString();
     const { data } = await sb.from('perfiles').select('*').gt('ultimo_acceso', desde).order('ultimo_acceso', { ascending: false });
@@ -317,13 +361,13 @@ async function tab(t){
   if (t === 'mensajes') {
     const { data } = await sb.from('mensajes').select('*, salas(nombre,creador_apodo)').eq('eliminado', false).order('creado', { ascending: false }).limit(100);
     (data || []).forEach(m => { const r = el('div', 'row'); const s = el('span', '', m.texto); s.append(el('small', '', '@' + m.apodo + ' · ' + (m.salas ? 'sala «' + m.salas.nombre + '» de @' + m.salas.creador_apodo : m.categoria) + ' · ' + hora(m.creado)));
-      r.append(s, btn('Eliminar', 'bad', () => borrar(m.id))); if (m.user_id) r.append(btn('Avisar', '', () => sancion(m, 'aviso')), btn('Silenciar', '', () => sancion(m, 'silencio'))); lista.append(r); });
+      r.append(s); if (m.audio_path) r.append(audioBtn(m.audio_path)); r.append(btn('Eliminar', 'bad', () => borrar(m.id))); if (m.user_id) r.append(btn('Avisar', '', () => sancion(m, 'aviso')), btn('Silenciar', '', () => sancion(m, 'silencio'))); lista.append(r); });
   }
   if (t === 'reportes') {
-    const { data } = await sb.from('reportes').select('*, mensajes(id, texto, apodo, eliminado, user_id)').eq('resuelto', false).order('creado', { ascending: false }).limit(100);
+    const { data } = await sb.from('reportes').select('*, mensajes(id, texto, apodo, eliminado, user_id, audio_path)').eq('resuelto', false).order('creado', { ascending: false }).limit(100);
     if (!data?.length) lista.append(el('p', '', 'No hay reportes.'));
     (data || []).forEach(x => { const m = x.mensajes; const r = el('div', 'row'); const s = el('span', '', m ? m.texto : x.motivo);
-      s.append(el('small', '', m ? '@' + m.apodo + ' · ' + x.motivo : '')); r.append(s);
+      s.append(el('small', '', m ? '@' + m.apodo + ' · ' + x.motivo : '')); r.append(s); if (m?.audio_path) r.append(audioBtn(m.audio_path));
       if (m && m.user_id) r.append(btn('Avisar', '', () => sancion(m, 'aviso')), btn('Silenciar', '', () => sancion(m, 'silencio')));
       r.append(btn('Resuelto', '', async () => { await sb.from('reportes').update({ resuelto: true }).eq('id', x.id); tab('reportes'); }));
       if (m && !m.eliminado) r.append(btn('Eliminar', 'bad', async () => { await borrar(m.id); tab('reportes'); })); lista.append(r); });
@@ -444,9 +488,26 @@ async function opcionesSala(){
     btn('Cerrar sala', 'bad', async () => { if (!confirm('¿Cerrar la sala? Nadie podrá volver a entrar.')) return; const { error } = await sb.rpc('cerrar_sala', { s: id }); if (error) return alert(error.message); $('panel').classList.add('hide'); await cargarSalas(); irA('cat', 'roblox'); }));
 }
 
+function barraRank(sel){
+  const bar = el('div', 'tabs');
+  [[7, 'Semana'], [30, 'Mes'], [365, 'Año'], ['don', '💛 Donantes']].forEach(([d, n]) => bar.append(btn(n, d === sel ? 'on' : '', () => ranking(d))));
+  return bar;
+}
+async function donantes(){
+  const b = hoja('💛 Donantes');
+  b.append(barraRank('don'), el('p', '', 'Gracias a quienes apoyan la página. Donar es voluntario; cada persona elige si aparece y si se muestra el monto. Al donar, escribe tu apodo en el motivo o mensaje de la transferencia.'));
+  if (ALIAS_APOYO) { const r = el('div', 'row'); const cp = btn('Copiar', 'go', async () => { try { await navigator.clipboard.writeText(ALIAS_APOYO); cp.textContent = '¡Copiado!'; } catch { cp.textContent = 'Copia el alias a mano'; } });
+    r.append(el('span', '', '💛 Alias para transferir: ' + ALIAS_APOYO), cp); b.append(r); }
+  if (LINK_APOYO) { const a = el('a', '', '💛 Apoyar la página'); a.href = LINK_APOYO; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.style.color = 'var(--lime)'; b.append(a); }
+  const { data, error } = await sb.rpc('ranking_donantes');
+  if (error || !data?.length) { b.append(el('p', '', 'Todavía no hay donantes en la tabla.')); return; }
+  data.forEach((u, i) => { const r = el('div', 'row');
+    r.append(el('span', '', (['🥇', '🥈', '🥉'][i] || (i + 1) + '.') + ' ' + u.av + ' @' + u.ap + (u.ap === me.apodo ? ' (tú)' : '')),
+      el('b', '', u.total != null ? '$' + Number(u.total).toLocaleString('es-AR') : '💛')); b.append(r); });
+}
 async function ranking(dias){
-  const b = hoja('🏆 Usuarios más activos'); const bar = el('div', 'tabs');
-  [[7, 'Semana'], [30, 'Mes'], [365, 'Año']].forEach(([d, n]) => bar.append(btn(n, d === dias ? 'on' : '', () => ranking(d))));
+  if (dias === 'don') return donantes();
+  const b = hoja('🏆 Usuarios más activos'); const bar = barraRank(dias);
   b.append(bar, el('p', '', 'Cuenta los mensajes en los chats públicos (máximo 50 por día, para que el spam no sirva).'));
   const { data, error } = await sb.rpc('ranking_activos', { dias });
   if (error || !data?.length) { b.append(el('p', '', 'Todavía no hay datos para este periodo.')); return; }
@@ -487,6 +548,171 @@ function ayuda(){
 }
 $('bBuscar').onclick = buscar; $('bEv').onclick = eventos; $('bGuia').onclick = guias; $('bSala').onclick = opcionesSala;
 $('bRank').onclick = () => ranking(7); $('bAyuda').onclick = ayuda; $('yo').onclick = cuenta; $('bell').onclick = verNotif;
+
+
+// ---------- Mensajes de voz (solo salas privadas) ----------
+const MAX_VOZ = 60;
+let rec = null;
+function resetMic(){ $('mic').textContent = '🎤'; $('mic').classList.remove('bad'); $('micX').classList.add('hide'); }
+async function grabar(){
+  if (rec) return rec.parar();                       // segundo toque = enviar
+  if (act.t !== 'sala' || act.ro) return;
+  if (!navigator.mediaDevices || !window.MediaRecorder) { $('smsg').textContent = 'Tu navegador no permite grabar audio. '; return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+  catch { $('smsg').textContent = 'No se pudo usar el micrófono. Revisa el permiso del navegador. '; return; }
+  const tipo = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'].find(t => MediaRecorder.isTypeSupported(t));
+  const mr = new MediaRecorder(stream, tipo ? { mimeType: tipo, audioBitsPerSecond: 32000 } : { audioBitsPerSecond: 32000 });
+  const trozos = [], sala = act.id, t0 = Date.now(); let cancelado = false, tick = null;
+  mr.ondataavailable = e => { if (e.data.size) trozos.push(e.data); };
+  mr.onstop = async () => {
+    clearInterval(tick); stream.getTracks().forEach(t => t.stop()); rec = null; resetMic();
+    if (cancelado || Date.now() - t0 < 700) return;
+    await enviarVoz(new Blob(trozos, { type: mr.mimeType }), sala);
+  };
+  const parar = () => { if (mr.state !== 'inactive') mr.stop(); };
+  rec = { parar, cancelar: () => { cancelado = true; parar(); } };
+  $('smsg').textContent = ''; $('mic').classList.add('bad'); $('micX').classList.remove('hide');
+  const marca = () => { const s = Math.floor((Date.now() - t0) / 1000); $('mic').textContent = '⏹ Enviar ' + s + 's'; if (s >= MAX_VOZ) parar(); };
+  tick = setInterval(marca, 250); marca(); mr.start();
+}
+async function enviarVoz(blob, sala){
+  const m = $('smsg'); m.textContent = 'Enviando audio… ';
+  const tipo = (blob.type || 'audio/webm').split(';')[0];
+  const ext = tipo.includes('mp4') ? 'm4a' : tipo.includes('ogg') ? 'ogg' : 'webm';
+  const ruta = sala + '/' + me.id + '/' + Date.now() + '.' + ext;
+  const { error: e1 } = await sb.storage.from('audios').upload(ruta, blob, { contentType: tipo });
+  if (e1) { m.textContent = 'No se pudo subir el audio. '; return; }
+  const { error } = await sb.from('mensajes').insert({ sala_id: sala, user_id: me.id, apodo: me.apodo, avatar: me.avatar || '🙂', texto: '🎤 Mensaje de voz', audio_path: ruta });
+  if (error) { await sb.storage.from('audios').remove([ruta]); m.textContent = error.message.includes('row-level') ? await motivoBloqueo() : error.message + ' '; return; }
+  m.textContent = '';
+}
+function audioBtn(path){
+  const w = el('div');
+  const b = btn('▶ Escuchar', 'r', async () => {
+    const { data, error } = await sb.storage.from('audios').createSignedUrl(path, 300);
+    if (error || !data) { b.textContent = 'Audio no disponible'; return; }
+    const a = el('audio'); a.controls = true; a.autoplay = true; a.src = data.signedUrl; a.style.cssText = 'width:100%;margin-top:6px'; b.replaceWith(a);
+  });
+  w.append(b); return w;
+}
+$('mic').onclick = grabar; $('micX').onclick = () => rec && rec.cancelar();
+
+// ---------- Llamada de voz grupal (solo salas privadas) ----------
+// Conexión directa entre participantes (WebRTC). Supabase solo sirve para avisarse y ver quién está dentro.
+const LLAMADAS_ACTIVAS = false;   // pon true cuando las llamadas tengan moderación y la IP oculta
+const MAX_LLAMADA = 6;
+// Para redes estrictas / datos móviles agrega aquí un servidor TURN: { urls: 'turn:TU_SERVIDOR:3478', username: '…', credential: '…' }
+const ICE = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+let call = null;
+
+function mirarLlamada(sala){
+  if (!LLAMADAS_ACTIVAS) return;
+  if (call && (call.sala === sala || call.dentro)) return pintarBarra();
+  cerrarCanalLlamada();
+  const c = call = { sala, nombre: salasInfo[sala]?.nombre || 'sala', pcs: new Map(), gente: {}, dentro: false, listo: false, mute: false, stream: null, aviso: '' };
+  c.ch = sb.channel('llamada:' + sala, { config: { private: true, presence: { key: me.id } } });
+  c.ch.on('presence', { event: 'sync' }, () => { if (call === c) sincronizar(); })
+    .on('broadcast', { event: 'sig' }, m => { if (call === c) alSenal(m.payload); })
+    .subscribe(st => { if (call !== c) return; c.listo = st === 'SUBSCRIBED'; if (st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') c.aviso = 'No se pudo conectar con la llamada.'; pintarBarra(); });
+  pintarBarra();
+}
+function limpiarMedios(c){
+  clearInterval(c.horas);
+  c.pcs.forEach(p => { p.pc.onconnectionstatechange = null; p.pc.close(); if (p.audio) p.audio.srcObject = null; }); c.pcs.clear();
+  if (c.stream) c.stream.getTracks().forEach(t => t.stop()); c.stream = null;
+}
+function cerrarCanalLlamada(){
+  if (!call) return pintarBarra();
+  const c = call; call = null; limpiarMedios(c); sb.removeChannel(c.ch); pintarBarra();
+}
+function sincronizar(){
+  const gente = {};
+  Object.values(call.ch.presenceState()).forEach(a => a.forEach(m => { if (m.uid) gente[m.uid] = m.ap; }));
+  call.gente = gente;
+  if (call.dentro) {
+    // Entre dos personas ofrece siempre la de id menor: así nunca se cruzan dos ofertas
+    for (const uid of Object.keys(gente)) if (uid !== me.id && !call.pcs.has(uid) && me.id < uid) ofrecer(uid);
+    for (const uid of [...call.pcs.keys()]) if (!gente[uid]) cerrarPeer(uid);
+  }
+  pintarBarra();
+}
+function senal(para, tipo, data){ call.ch.send({ type: 'broadcast', event: 'sig', payload: { de: me.id, para, tipo, data } }); }
+function nuevoPeer(uid){
+  const pc = new RTCPeerConnection(ICE), p = { pc, cola: [], audio: null };
+  call.pcs.set(uid, p);
+  call.stream.getTracks().forEach(t => pc.addTrack(t, call.stream));
+  pc.onicecandidate = e => { if (e.candidate && call) senal(uid, 'ice', e.candidate.toJSON()); };
+  pc.ontrack = e => { if (!p.audio) { p.audio = new Audio(); p.audio.autoplay = true; } p.audio.srcObject = e.streams[0]; p.audio.play().catch(() => {}); };
+  pc.onconnectionstatechange = () => { if (pc.connectionState === 'failed' && call) {
+    call.aviso = 'No se pudo conectar con @' + (call.gente[uid] || '?') + ' (su red puede necesitar un servidor TURN).'; cerrarPeer(uid); pintarBarra(); } };
+  return p;
+}
+function cerrarPeer(uid){
+  const p = call && call.pcs.get(uid); if (!p) return;
+  p.pc.onconnectionstatechange = null; p.pc.close(); if (p.audio) p.audio.srcObject = null; call.pcs.delete(uid);
+}
+async function ofrecer(uid){
+  try { const p = nuevoPeer(uid); await p.pc.setLocalDescription(await p.pc.createOffer()); senal(uid, 'offer', p.pc.localDescription.toJSON()); }
+  catch { cerrarPeer(uid); }
+}
+async function vaciarCola(p){ for (const c of p.cola.splice(0)) await p.pc.addIceCandidate(c).catch(() => {}); }
+async function alSenal(x){
+  if (!call || !call.dentro || !x || x.para !== me.id) return;
+  try {
+    let p = call.pcs.get(x.de);
+    if (x.tipo === 'offer') {
+      if (p) cerrarPeer(x.de);
+      p = nuevoPeer(x.de);
+      await p.pc.setRemoteDescription(x.data); await vaciarCola(p);
+      await p.pc.setLocalDescription(await p.pc.createAnswer()); senal(x.de, 'answer', p.pc.localDescription.toJSON());
+    } else if (x.tipo === 'answer' && p) { await p.pc.setRemoteDescription(x.data); await vaciarCola(p); }
+    else if (x.tipo === 'ice' && p) { if (p.pc.remoteDescription) await p.pc.addIceCandidate(x.data).catch(() => {}); else p.cola.push(x.data); }
+  } catch { cerrarPeer(x.de); }
+}
+async function unirseLlamada(){
+  const c = call; if (!c || c.dentro) return;
+  if (!navigator.mediaDevices || !window.RTCPeerConnection) { c.aviso = 'Tu navegador no permite llamadas de voz.'; return pintarBarra(); }
+  if (!c.listo) { c.aviso = 'Conectando… prueba otra vez en un momento.'; return pintarBarra(); }
+  if (Object.keys(c.gente).length >= MAX_LLAMADA) { c.aviso = 'La llamada está llena (máximo ' + MAX_LLAMADA + ').'; return pintarBarra(); }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
+  catch { c.aviso = 'No se pudo usar el micrófono. Revisa el permiso del navegador.'; return pintarBarra(); }
+  if (call !== c) { stream.getTracks().forEach(t => t.stop()); return; }     // saliste de la sala mientras elegías el permiso
+  c.stream = stream; c.aviso = ''; c.dentro = true; c.mute = false; c.t0 = Date.now();
+  c.horas = setInterval(() => { const h = Math.round((Date.now() - c.t0) / 3600000); c.aviso = '⏰ Llevas ' + h + (h === 1 ? ' hora' : ' horas') + ' en la llamada.'; pintarBarra(); }, 3600000);
+  const r = await c.ch.track({ uid: me.id, ap: me.apodo });
+  if (r !== 'ok' && call === c) { c.aviso = 'No se pudo entrar a la llamada.'; c.dentro = false; limpiarMedios(c); }
+  pintarBarra();
+}
+async function salirLlamada(){
+  const c = call; if (!c || !c.dentro) return;
+  c.dentro = false; c.aviso = ''; limpiarMedios(c);
+  try { await c.ch.untrack(); } catch {}
+  if (call === c && !(act.t === 'sala' && act.id === c.sala && !act.ro)) cerrarCanalLlamada(); else pintarBarra();
+}
+function alternarMicro(){
+  call.mute = !call.mute; call.stream && call.stream.getAudioTracks().forEach(t => { t.enabled = !call.mute; }); pintarBarra();
+}
+async function reportarLlamada(){
+  const mot = prompt('¿Qué pasó en la llamada?'); if (!mot) return;
+  const quienes = Object.values(call.gente).map(a => '@' + a).join(', ');
+  await sb.from('reportes').insert({ reportado_por: me.id, motivo: ('LLAMADA en sala «' + call.nombre + '» (id ' + call.sala + ') con ' + quienes + ': ' + mot).slice(0, 500) });
+  alert('Gracias, lo revisaremos.');
+}
+function pintarBarra(){
+  const b = $('callbar');
+  const aqui = call && act.t === 'sala' && !act.ro && act.id === call.sala;
+  if (!call || !(call.dentro || aqui)) { b.classList.add('hide'); return; }
+  const nombres = Object.entries(call.gente).map(([u, a]) => '@' + a + (u === me.id ? ' (tú)' : ''));
+  b.replaceChildren();
+  if (!call.dentro) b.append(btn(nombres.length ? '📞 En llamada: ' + nombres.join(', ') + ' — toca para unirte' : '📞 Iniciar llamada de voz', 'go', unirseLlamada));
+  else b.append(el('span', '', '🎧 ' + (aqui ? '' : call.nombre + ': ') + nombres.join(', ')),
+    btn(call.mute ? '🔇 Micro apagado' : '🎙 Micro encendido', call.mute ? 'bad' : '', alternarMicro),
+    btn('📴 Salir', 'bad', salirLlamada), btn('⚑ Reportar', '', reportarLlamada));
+  if (call.aviso) b.append(el('small', '', call.aviso));
+  b.classList.remove('hide');
+}
 
 // ---------- Privacidad e inicio ----------
 ['priv1','priv2'].forEach(i => $(i).onclick = e => { e.preventDefault(); $('modal').classList.remove('hide'); });
