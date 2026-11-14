@@ -2,728 +2,193 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zona Gamer</title>
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.18.3/dist/livekit-client.umd.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Salas de juegos</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#15132b;--panel:#211e44;--line:#37336a;--txt:#f1efff;--mut:#a9a5d6;--lime:#b8f04b;--pink:#ff5d8f;--r:14px}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.5 Nunito,system-ui,sans-serif}
-h1,h2,h3,.brand{font-family:'Baloo 2',system-ui,sans-serif;margin:0}
-button,input{font:inherit;color:inherit}
-input,select,textarea{background:#15132b;border:2px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
-input:focus,button:focus-visible{outline:3px solid var(--lime);outline-offset:1px}
-button{cursor:pointer;border:0;border-radius:10px;padding:9px 14px;background:var(--line);font-weight:700}
-.go{background:var(--lime);color:#15132b}.bad{background:var(--pink);color:#15132b}
-.hide{display:none!important}
-.chk{display:flex;gap:8px;align-items:flex-start;font-size:.9rem}.chk input{width:auto;margin-top:4px}.chk a{color:var(--lime)}
-#salas button,#tools button{padding:5px 10px;font-size:.9rem;white-space:nowrap}
-#tools{border-bottom:2px solid var(--line)}
-#aviso{background:var(--pink);color:#15132b;padding:6px 14px;font-weight:700}
-.rx{display:flex;gap:6px;margin-top:4px}.r{padding:1px 8px;font-size:.85rem;background:#15132b}.r.on{background:var(--lime);color:#15132b}
-#pbody h3{margin:16px 0 6px}#pbody input,#pbody select,#pbody textarea{margin:4px 0}#pbody button{margin:3px 6px 3px 0}
-.m{position:relative}
-#auth{max-width:380px;margin:8vh auto;padding:24px;background:var(--panel);border-radius:var(--r)}
-#auth h1{font-size:2.2rem;line-height:1.1;margin-bottom:6px}
-#auth form{display:grid;gap:10px;margin-top:14px}
-.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}.tabs button.on{background:var(--lime);color:#15132b}
-.msgbox{min-height:1.4em;color:var(--pink);font-size:.95rem}.ok{color:var(--lime)}
-#app{display:grid;grid-template-rows:auto auto auto auto 1fr auto;height:100dvh}
-header{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--panel)}
-.brand{font-size:1.4rem;color:var(--lime)}
-nav,#salas,#tools{display:flex;gap:8px;overflow-x:auto;padding:10px 14px;border-bottom:2px solid var(--line)}
-nav button.on,#salas button.on,#tools button.on{background:var(--lime);color:#15132b}
-#msgs{overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
-.m{background:var(--panel);border-radius:var(--r);padding:8px 12px;max-width:640px;overflow-wrap:anywhere}
-.m b{color:var(--lime)}.m small{color:var(--mut);margin-left:6px}
-.m .x{float:right;background:none;padding:0 4px;color:var(--mut)}
-#send{display:flex;gap:8px;padding:10px 14px;background:var(--panel)}
-footer{font-size:.8rem;color:var(--mut);padding:4px 14px 8px;background:var(--panel)}
-footer a{color:var(--lime);cursor:pointer}
-#adminBtn{position:fixed;right:14px;bottom:84px;background:var(--pink);color:#15132b;box-shadow:0 4px 14px #0008;z-index:5}
-#panel{position:fixed;inset:0;background:#000a;z-index:10;display:flex;align-items:flex-end;justify-content:center}
-#panel>div{background:var(--bg);width:min(760px,100%);max-height:88dvh;overflow-y:auto;border-radius:var(--r) var(--r) 0 0;padding:16px}
-.row{flex-wrap:wrap;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line)}
-.row span{overflow-wrap:anywhere}.row small{color:var(--mut);display:block}
-.tag{background:var(--pink);color:#15132b;border-radius:6px;padding:0 6px;font-size:.8rem}
-#modal,#sm,#tm{position:fixed;inset:0;background:#000a;z-index:20;display:grid;place-items:center;padding:16px}
-#modal div,#sm div,#tm div{width:min(440px,100%);background:var(--panel);border-radius:var(--r);padding:20px;max-width:440px}
-#callbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 14px;background:var(--panel);border-top:2px solid var(--line)}#callbar small{color:var(--pink)}
-@media (prefers-reduced-motion:no-preference){#panel>div{animation:up .2s ease-out}@keyframes up{from{transform:translateY(30px)}}}
+:root{--bg:#F3F1FA;--sf:#fff;--ink:#231B3A;--mu:#5E5877;--ln:#DAD5EA;--c:#6C4CF1;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root{--bg:#171229;--sf:#241D3D;--ink:#F1EEFB;--mu:#B0A9CC;--ln:#372E58}}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1rem/1.5 Nunito,system-ui,sans-serif;display:flex;flex-direction:column}
+h1,h2{font-family:Fredoka,"Trebuchet MS",sans-serif;margin:0}
+header{padding:.8rem 1rem .3rem;display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+header h1{font-size:1.5rem}header span{color:var(--mu);font-size:.85rem}
+button,input{font:inherit}
+.sm{border:2px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:.6rem;padding:.2rem .6rem;font-weight:700;font-size:.8rem;cursor:pointer}
+.tabs{display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 1rem;border-bottom:1px solid var(--ln)}
+.tab{flex:0 0 auto;border:2px solid var(--ln);background:var(--sf);color:var(--ink);border-radius:2rem;padding:.4rem .9rem;font-weight:700;cursor:pointer}
+.tab[aria-selected=true]{background:var(--c);border-color:var(--c);color:#fff}
+.tab.plus{border-style:dashed}
+#head{padding:.6rem 1rem;border-left:8px solid var(--c);background:var(--sf)}
+#head h2{font-size:1.2rem}#head p{margin:0;color:var(--mu);font-size:.9rem}
+#log{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.6rem;min-height:0}
+.msg{max-width:85%;background:var(--sf);border:1px solid var(--ln);border-radius:1rem 1rem 1rem .25rem;padding:.5rem .8rem;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;background:var(--c);border-color:var(--c);color:#fff;border-radius:1rem 1rem .25rem 1rem}
+.msg.off{opacity:.55;border-style:dashed}
+.msg b{display:block;font-size:.8rem;opacity:.85}.msg small{opacity:.7;font-size:.7rem}
+.act{display:flex;gap:.4rem;margin-top:.35rem;flex-wrap:wrap}
+.act button{border:1px solid currentColor;background:none;color:inherit;border-radius:.5rem;padding:.1rem .5rem;font-size:.75rem;font-weight:700;cursor:pointer}
+.empty{color:var(--mu);text-align:center;margin:auto;max-width:22rem}
+#note{padding:.4rem 1rem;background:var(--sf);border-top:1px solid var(--ln);color:var(--mu);font-size:.85rem}
+#f{display:flex;gap:.5rem;padding:.7rem 1rem;border-top:1px solid var(--ln);background:var(--sf)}
+#txt{flex:1;min-width:0}
+input[type=text],input[type=email],input[type=password]{width:100%;color:var(--ink);background:var(--bg);border:2px solid var(--ln);border-radius:.8rem;padding:.6rem .8rem;margin:.3rem 0}
+.go{border:0;border-radius:.8rem;padding:.6rem 1.1rem;background:var(--c);color:#fff;font:700 1rem Fredoka,sans-serif;cursor:pointer}
+.go:disabled{opacity:.5}
+#gate{position:fixed;inset:0;z-index:9;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1rem;overflow-y:auto}
+#gate[hidden]{display:none}
+#gate section{background:var(--sf);border:1px solid var(--ln);border-radius:1.2rem;padding:1.4rem;max-width:26rem;width:100%}
+#gate p,#gate li,#gate label,details{color:var(--mu);font-size:.9rem}
+#err{color:#C2306B;font-weight:700;min-height:1.4rem}
+.lnk{background:none;border:0;color:var(--c);font-weight:700;cursor:pointer;padding:.2rem 0;text-decoration:underline}
+:focus-visible{outline:3px solid var(--c);outline-offset:2px}
 </style>
 </head>
 <body>
+<header><h1>Salas de juegos</h1><span id="who"></span><button class="sm" id="out" hidden>Salir</button></header>
+<nav class="tabs" id="tabs" aria-label="Salas"></nav>
+<div id="head"></div>
+<main id="log" aria-live="polite"></main>
+<div id="note" hidden></div>
+<form id="f"><input id="txt" type="text" maxlength="300" placeholder="Escribí un mensaje" aria-label="Mensaje" autocomplete="off"><button class="go" id="btn">Enviar</button></form>
 
-<section id="auth">
-  <h1>Zona Gamer</h1>
-  <p style="color:var(--mut);margin:0">Habla de Roblox, Minecraft y más con otros jugadores.</p>
-  <div class="tabs"><button id="tIn" class="on">Entrar</button><button id="tUp">Crear cuenta</button></div>
-  <form id="f">
-    <input id="apodo" class="hide" placeholder="Apodo (3 a 16 letras, números o _)" autocomplete="nickname" maxlength="16">
-    <input id="email" type="email" placeholder="Correo (Gmail u otro)" autocomplete="email" required>
-    <input id="pass" type="password" placeholder="Contraseña (mínimo 8)" autocomplete="current-password" minlength="8" required>
-    <label class="chk"><input type="checkbox" id="acepto" required><span>Acepto los <a href="#" id="verT">términos y condiciones</a></span></label>
-    <label class="chk"><input type="checkbox" id="mayor" required><span>Acepto que soy mayor de edad (18 años o más)</span></label>
-    <button class="go" id="enviar">Entrar</button>
-    <div id="amsg" class="msgbox" role="status"></div>
-  </form>
-  <p style="font-size:.85rem;color:var(--mut)"><a href="#" id="olvide" style="color:var(--lime)">¿Olvidaste tu contraseña?</a><br>No uses tu nombre real. <a href="#" id="priv1" style="color:var(--lime)">Privacidad</a></p>
-</section>
-
-<div id="app" class="hide">
-  <header><span class="brand">Zona Gamer</span><span><button id="bell">🔔</button> <button id="yo"></button> <button id="salir">Salir</button></span></header>
-  <div><div id="aviso" class="hide"></div><nav id="cats"></nav></div>
-  <div id="salas"></div>
-  <div id="tools"><button id="bBuscar">🔍 Buscar</button><button id="bRank">🏆 Ranking</button><button id="bEv">📅 Eventos</button><button id="bGuia">📚 Guías</button><button id="bSala" class="hide">⚙️ Mi sala</button><button id="bAyuda" class="bad">🆘 Ayuda</button></div>
-  <div id="msgs" aria-live="polite"></div>
-  <div>
-    <div id="callbar" class="hide"></div>
-    <form id="send"><input id="txt" placeholder="Escribe un mensaje…" maxlength="500" autocomplete="off"><button type="button" id="mic" class="hide" title="Mensaje de voz (máx. 60 s)">🎤</button><button type="button" id="micX" class="hide" title="Cancelar">✖</button><button class="go">Enviar</button></form>
-    <footer><span id="smsg" style="color:var(--pink)"></span> Sé amable y no compartas datos personales. <a id="priv2">Privacidad</a></footer>
-  </div>
+<div id="gate"><section>
+<h2 id="gt">Entrar</h2>
+<form id="gf">
+<input id="nk" type="text" maxlength="10" placeholder="Tu nombre (máx. 10)" aria-label="Nombre" autocomplete="nickname" hidden>
+<input id="em" type="email" placeholder="Email" aria-label="Email" autocomplete="email" required>
+<input id="pw" type="password" minlength="6" placeholder="Contraseña (mín. 6)" aria-label="Contraseña" autocomplete="current-password" required>
+<div id="tcw" hidden>
+<details><summary>Términos y condiciones</summary><ul>
+<li>Nada en esta página es privado: tu nombre y tus mensajes los ve cualquiera.</li>
+<li>No compartas datos personales (nombre real, dirección, teléfono, escuela).</li>
+<li>Se guarda tu email y un identificador de cuenta para poder entrar y moderar.</li>
+<li>Los moderadores pueden ocultar mensajes y bloquear cuentas.</li>
+<li>Tratá bien a los demás: sin acoso ni contenido ofensivo.</li></ul></details>
+<label><input type="checkbox" id="tc"> Acepto los términos y condiciones</label>
 </div>
+<div id="err" role="alert"></div>
+<button class="go" id="gb" type="submit">Entrar</button>
+</form>
+<p><button class="lnk" id="sw" type="button">Crear cuenta nueva</button><br><button class="lnk" id="fg" type="button">Olvidé mi contraseña</button></p>
+</section></div>
 
-<button id="adminBtn" class="hide">🛡️ Admin</button>
-<div id="panel" class="hide"><div id="pbody"></div></div>
-<div id="sm" class="hide"><div>
-  <h3 id="sh"></h3>
-  <form id="sf" style="display:grid;gap:10px;margin-top:10px">
-    <input id="i1" required autocomplete="off">
-    <input id="i2" type="password" placeholder="Contraseña de la sala (mínimo 4)" minlength="4" autocomplete="off" required>
-    <div id="smsg2" class="msgbox" role="status"></div>
-    <div style="display:flex;gap:8px"><button class="go" id="sgo"></button><button type="button" id="scancel">Cancelar</button></div>
-  </form>
-</div></div>
-<div id="tm" class="hide"><div style="max-height:85dvh;overflow-y:auto">
-  <h3>Términos y condiciones</h3>
-  <ol style="padding-left:20px;font-size:.95rem">
-    <li>Esta página es solo para personas de 18 años o más. Al crear tu cuenta declaras que lo eres. Si descubrimos que no, podemos suspender o eliminar tu cuenta.</li>
-    <li>La página aplica medidas de seguridad: correo verificado, contraseñas cifradas y moderación. Al usarla aceptas hacerlo de buena fe y cuidar tu contraseña sin compartirla.</li>
-    <li>Las salas privadas son solo para quienes tengan el apodo del creador y la contraseña de la sala. Nadie más puede entrar. La única excepción son los moderadores y administradores, que pueden acceder a todas las salas, leer sus mensajes y escuchar sus mensajes de voz para hacer cumplir estas reglas y la ley. Aceptas esto al usar las salas.</li>
-    <li>Las llamadas de voz de las salas privadas no se graban. Pasan por un servicio externo de llamadas, por lo que los demás participantes no ven tu dirección IP. Los moderadores pueden sacar a alguien de una llamada. Si pasa algo, usa el botón ⚑ Reportar durante la llamada. Cada persona tiene un tiempo máximo de llamada por día.</li>
-    <li>Las cuentas nuevas deben ser aprobadas por un moderador antes de poder entrar.</li>
-    <li>Donar es voluntario y no cambia las reglas. Aparecer en la tabla de donantes es opcional.</li>
-    <li>Está prohibido: acoso, insultos, odio, amenazas, contenido sexual o violento, estafas, spam, hacerse pasar por otra persona y compartir datos personales (tuyos o de otros).</li>
-    <li>Los mensajes borrados pueden conservarse y entregarse a las autoridades si la ley lo exige.</li>
-    <li>Si incumples las reglas, podemos darte avisos (3 avisos suspenden la cuenta), silenciarte por un tiempo, borrar tus mensajes o eliminar tu cuenta. Los mensajes pueden ser analizados automáticamente para detectar conductas de riesgo.</li>
-    <li>Guardamos tu correo, apodo, mensajes y mensajes de voz. Tu correo nunca se muestra a otros usuarios. Si borras tu cuenta, tus mensajes se conservan sin tu apodo para fines de moderación y seguridad.</li>
-    <li>Esta página es independiente y no está afiliada a Roblox, Minecraft ni Fortnite.</li>
-  </ol>
-  <button class="go" id="cierraT">Cerrar</button>
-</div></div>
-<div id="modal" class="hide"><div>
-  <h3>Política de privacidad</h3>
-  <p>Solo guardamos tu correo, tu apodo, tus mensajes y tus mensajes de voz (solo existen en salas privadas). El correo nunca se muestra a otros usuarios. Un administrador puede borrar mensajes y suspender cuentas que rompan las reglas. Las salas privadas se protegen con contraseña, pero los moderadores y administradores pueden revisarlas para moderar y cumplir la ley. Si donas y eliges aparecer, tu apodo se muestra en la tabla de donantes (y el monto solo si lo permites). Para borrar tu cuenta, escríbenos desde tu correo registrado.</p>
-  <button class="go" id="cierra">Entendido</button>
-</div></div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,doc,getDoc,setDoc,addDoc,updateDoc,deleteDoc,writeBatch,query,orderBy,limit,onSnapshot,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<script>
-// ====== CONFIGURA ESTO (Supabase > Project Settings > API) ======
-const SUPABASE_URL = 'https://yehcutkljnsldnjxknsb.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_7grGC0aSiWrZ3D_wGUV69A_wxyy78Ct';
-// =================================================================
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-const $ = id => document.getElementById(id);
-const TERMINOS_V = '2026-11';
-const ALIAS_APOYO = '';   // pega aquí tu alias de Mercado Pago (déjalo vacío para ocultarlo)
-const LINK_APOYO = 'https://cafecito.app/vipp-play';   // pega aquí tu link de Cafecito / Ko-fi / Mercado Pago (déjalo vacío para ocultar el botón)
-let bloq = new Set(), catsList = [], salasInfo = {}, mant = false;
-let me = null, act = {}, canal = null, modoReg = false, beat = null;
-
-function el(tag, cls, text){ const e = document.createElement(tag); if(cls) e.className = cls; if(text !== undefined) e.textContent = text; return e; }
-function btn(txt, cls, fn){ const b = el('button', cls, txt); b.onclick = fn; return b; }
-const hora = t => new Date(t).toLocaleTimeString('es', {hour:'2-digit', minute:'2-digit'});
-
-// ---------- Acceso ----------
-function modo(reg){ modoReg = reg; $('apodo').classList.toggle('hide', !reg); $('tUp').classList.toggle('on', reg); $('tIn').classList.toggle('on', !reg);
-  $('enviar').textContent = reg ? 'Crear cuenta' : 'Entrar'; $('amsg').textContent = ''; }
-$('tIn').onclick = () => modo(false); $('tUp').onclick = () => modo(true);
-
-$('f').onsubmit = async e => {
-  e.preventDefault(); const m = $('amsg'); m.className = 'msgbox'; m.textContent = '';
-  const email = $('email').value.trim(), password = $('pass').value, apodo = $('apodo').value.trim();
-  if (modoReg) {
-    if (!/^[A-Za-z0-9_]{3,16}$/.test(apodo)) return m.textContent = 'El apodo debe tener 3 a 16 letras, números o _.';
-    if (/(idiota|puto|puta|mierda|nazi)/i.test(apodo)) return m.textContent = 'Elige otro apodo.';
-    const { data: libre } = await sb.rpc('apodo_libre', { a: apodo });
-    if (!libre) return m.textContent = 'Ese apodo ya está en uso.';
-    const { error } = await sb.auth.signUp({ email, password, options: { data: { apodo, terminos: true, mayor: true } } });
-    if (error) return m.textContent = error.message;
-    m.className = 'msgbox ok'; m.textContent = 'Listo. Revisa tu correo y confirma tu cuenta. Después un moderador tiene que aprobarla para que puedas entrar.';
-  } else {
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) return m.textContent = error.message.includes('not confirmed') ? 'Confirma tu correo primero.' : 'Correo o contraseña incorrectos.';
-    iniciar($('acepto').checked, $('mayor').checked);
-  }
+/* ===== PEGÁ ACÁ TU CONFIGURACIÓN DE FIREBASE (ver LEEME.md) ===== */
+const CFG={
+  apiKey:"AIzaSyAnPHlOler7aKUjqsSS_3RL0t5VBLFCB2c",
+  authDomain:"vipp-play.firebaseapp.com",
+  projectId:"vipp-play",
+  appId:"1:166768283020:web:fb5983233f1102eb391aa9"
 };
+/* ================================================================= */
 
-async function iniciar(acepta, mayor){
-  const { data: { user } } = await sb.auth.getUser(); if (!user) return;
-  const { data: p } = await sb.from('perfiles').select('*').eq('id', user.id).single();
-  if (!p) return;
-  if (p.baneado) { await sb.auth.signOut(); modo(false); $('amsg').textContent = 'Tu cuenta está suspendida. Motivo: ' + (p.motivo_ban || 'sin especificar'); return; }
-  if (!p.aprobado && !p.es_admin && !p.es_moderador) { await sb.auth.signOut(); modo(false); $('amsg').textContent = 'Tu cuenta está pendiente de aprobación. Un moderador la revisará pronto.'; return; }
-  if (!p.acepto_terminos) {
-    if (!acepta) { await sb.auth.signOut(); modo(false); $('amsg').textContent = 'Inicia sesión y acepta los términos y condiciones para entrar.'; return; }
-    await sb.rpc('aceptar_terminos', { v: TERMINOS_V }); p.acepto_terminos = new Date().toISOString();
-  }
-  if (!p.mayor_edad) {
-    if (!mayor) { await sb.auth.signOut(); modo(false); $('amsg').textContent = 'Inicia sesión y confirma que eres mayor de edad para entrar.'; return; }
-    await sb.rpc('declarar_mayor'); p.mayor_edad = new Date().toISOString();
-  }
-  me = p; me.email = user.email; $('auth').classList.add('hide'); $('app').classList.remove('hide'); $('yo').textContent = p.apodo;
-  $('adminBtn').classList.toggle('hide', !(p.es_admin || p.es_moderador)); $('adminBtn').textContent = p.es_admin ? '🛡️ Admin' : '🛡️ Moderar';
-  const { data: cs } = await sb.from('categorias').select('*'); catsList = cs;
-  $('cats').replaceChildren(...cs.map(c => { const b = btn(c.nombre, '', () => irA('cat', c.id)); b.dataset.k = 'cat' + c.id; return b; }));
-  sb.rpc('latido'); clearInterval(beat); beat = setInterval(() => { sb.rpc('latido'); cargarAjustes(); }, 60000);
-  const { data: bl } = await sb.from('bloqueos').select('bloqueado_id'); bloq = new Set((bl || []).map(x => x.bloqueado_id));
-  sb.channel('notif').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notificaciones', filter: 'user_id=eq.' + me.id }, () => contarNotif()).subscribe();
-  cargarAjustes(); contarNotif();
-  await cargarSalas(); irA('cat', 'roblox');
-}
+const $=id=>document.getElementById(id);
+const BASE=[
+{id:"general",n:"General",e:"🎮",c:"#6C4CF1",d:"Charla libre sobre cualquier juego."},
+{id:"roblox",n:"Roblox",e:"🧱",c:"#D9342B",d:"Brookhaven, Blox Fruits, Adopt Me y más."},
+{id:"minecraft",n:"Minecraft",e:"⛏️",c:"#2F8F3A",d:"Survival, creativo, mods y servidores."},
+{id:"fortnite",n:"Fortnite",e:"🪂",c:"#7A3FD1",d:"Dúos, escuadras y modo creativo."},
+{id:"freefire",n:"Free Fire",e:"🔥",c:"#D9731F",d:"Armá tu escuadra."},
+{id:"amongus",n:"Among Us",e:"🚀",c:"#C2306B",d:"¿Quién es el impostor?"},
+{id:"fc",n:"EA FC",e:"⚽",c:"#1F7FB8",d:"Ultimate Team, Pro Clubs y amistosos."},
+{id:"mariokart",n:"Mario Kart",e:"🏁",c:"#C99512",d:"Carreras y torneos."}];
+let custom=[],cur=BASE[0],db,auth,user=null,nick="",mod=false,banned=new Set(),docs=[],unsub=null,mode="login",reg=false,entered=null;
+let next=0;try{next=+localStorage.getItem("next")||0}catch(e){}
+const keyOf=v=>v.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
+const note=t=>{$("note").textContent=t;$("note").hidden=!t};
+const er=t=>{$("err").textContent=t};
+const ERR={"auth/invalid-credential":"Email o contraseña incorrectos.","auth/email-already-in-use":"Ese email ya tiene una cuenta.","auth/weak-password":"La contraseña necesita al menos 6 caracteres.","auth/invalid-email":"El email no es válido.","auth/too-many-requests":"Demasiados intentos. Esperá un rato."};
 
-$('salir').onclick = async () => { clearInterval(beat); if (canal) sb.removeChannel(canal); await sb.auth.signOut(); location.reload(); };
+if(CFG.apiKey==="PEGAR_AQUI"){er("Falta pegar la configuración de Firebase en index.html (ver LEEME.md).");$("gb").disabled=true}
+else{const app=initializeApp(CFG);auth=getAuth(app);db=getFirestore(app);
+ onAuthStateChanged(auth,async u=>{
+  if(!u){user=null;entered=null;$("gate").hidden=false;$("out").hidden=true;$("who").textContent="";if(unsub)unsub();return}
+  if(reg||entered===u.uid)return;
+  const s=await getDoc(doc(db,"users",u.uid));
+  if(!s.exists()){await signOut(auth);er("Esta cuenta no tiene perfil. Creá una nueva.");return}
+  enter(u,s.data().nick)})}
 
-// ---------- Chat ----------
-function pintar(m){
-  if (bloq.has(m.user_id)) return;
-  const d = el('div', 'm'); d.id = 'm' + m.id;
-  if (me.es_admin || me.es_moderador) d.append(btn('🗑', 'x', () => borrar(m.id)));
-  else if (m.user_id !== me.id) d.append(btn('⚑', 'x', () => reportar(m.id)), btn('🚫', 'x', () => bloquear(m.user_id, m.apodo)));
-  d.append(el('b', '', (m.avatar || '🙂') + ' ' + m.apodo), el('small', '', hora(m.creado)), el('div', '', m.texto));
-  if (m.audio_path) d.append(audioBtn(m.audio_path));
-  const rx = el('div', 'rx'); rx.dataset.id = m.id;
-  ['👍','😂','❤️','🔥'].forEach(e => { const b = btn(e, 'r', () => reaccionar(m.id, e)); b.dataset.e = e; rx.append(b); });
-  d.append(rx);
-  $('msgs').append(d); $('msgs').scrollTop = 1e9;
+async function enter(u,n){
+ entered=u.uid;user=u;nick=n;$("gate").hidden=true;$("out").hidden=false;$("who").textContent=n;
+ try{mod=(await getDoc(doc(db,"admins",u.uid))).exists()}catch(e){mod=false}
+ onSnapshot(collection(db,"banned"),s=>{banned=new Set(s.docs.map(d=>d.id));draw()},()=>{});
+ onSnapshot(collection(db,"rooms"),s=>{custom=s.docs.map(d=>({id:d.id,...d.data(),custom:true}));tabs()},()=>{});
+ open(cur);
 }
-async function irA(t, id, ro){
-  if (rec) rec.cancelar();
-  act = { t, id, ro }; $('mic').classList.toggle('hide', t !== 'sala' || !!ro);
-  if (t === 'sala' && !ro) mirarLlamada(id); else if (call && !call.dentro) cerrarCanalLlamada(); else pintarBarra(); $('send').classList.toggle('hide', !!ro); $('bSala').classList.toggle('hide', !(t === 'sala' && !ro && salasInfo[id]?.creador_apodo === me.apodo)); document.querySelectorAll('#cats button,#salas button').forEach(b => b.classList.toggle('on', b.dataset.k === t + id));
-  const col = t === 'cat' ? 'categoria' : 'sala_id';
-  $('msgs').replaceChildren();
-  const { data } = await sb.from('mensajes').select('*').eq(col, id).eq('eliminado', false).order('creado', { ascending: false }).limit(60);
-  (data || []).reverse().forEach(pintar); cargarReac();
-  if (canal) sb.removeChannel(canal);
-  canal = sb.channel('chat-' + t + id)
-    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'mensajes', filter: col + '=eq.' + id }, r => pintar(r.new))
-    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'mensajes' }, r => { if (r.new.eliminado) $('m' + r.new.id)?.remove(); })
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'reacciones' }, () => cargarReac())
-    .subscribe();
-}
-$('send').onsubmit = async e => {
-  e.preventDefault(); const t = $('txt').value.trim(); if (!t) return; $('smsg').textContent = '';
-  const { error } = await sb.from('mensajes').insert({ [act.t === 'cat' ? 'categoria' : 'sala_id']: act.id, user_id: me.id, apodo: me.apodo, avatar: me.avatar || '🙂', texto: t });
-  if (error) $('smsg').textContent = error.message.includes('row-level') ? await motivoBloqueo() : error.message + ' ';
-  else $('txt').value = '';
-};
-async function reportar(id){
-  const motivo = prompt('¿Por qué reportas este mensaje?'); if (!motivo) return;
-  await sb.from('reportes').insert({ mensaje_id: id, reportado_por: me.id, motivo }); alert('Gracias, lo revisaremos.');
-}
+function all(){return BASE.concat(custom)}
+function tabs(){const t=$("tabs");t.textContent="";
+ all().forEach(r=>{const b=document.createElement("button");b.className="tab";b.setAttribute("aria-selected",r.id===cur.id);
+  b.style.setProperty("--c",r.c);b.textContent=r.e+" "+r.n;b.onclick=()=>open(r);t.appendChild(b)});
+ const p=document.createElement("button");p.className="tab plus";p.textContent="+ Crear sala";
+ p.onclick=async()=>{const n=(prompt("Nombre de la sala (máx. 20 letras)")||"").trim().slice(0,20);if(n.length<2)return;
+  try{const r=await addDoc(collection(db,"rooms"),{n,e:"🎮",c:"#6C4CF1",d:"Sala creada por "+nick,ts:serverTimestamp()});open({id:r.id,n,e:"🎮",c:"#6C4CF1",d:"Sala creada por "+nick,custom:true})}
+  catch(e){note("No se pudo crear la sala.")}};
+ t.appendChild(p)}
+function open(r){cur=r;document.documentElement.style.setProperty("--c",r.c);tabs();
+ const h=$("head");h.textContent="";const a=document.createElement("h2"),p=document.createElement("p");
+ a.textContent=r.e+" "+r.n;p.textContent=r.d;h.append(a,p);
+ if(unsub)unsub();docs=[];draw();
+ unsub=onSnapshot(query(collection(db,"rooms",r.id,"msgs"),orderBy("ts","asc"),limit(100)),
+  s=>{docs=s.docs.map(d=>({ref:d.ref,id:d.id,...d.data({serverTimestamps:"estimate"})}));draw()},
+  ()=>note("No se pudo cargar la sala."))}
+function draw(){const log=$("log");log.textContent="";
+ const list=docs.filter(m=>mod||(!m.hidden&&!banned.has(m.uid)));
+ if(!list.length){const p=document.createElement("p");p.className="empty";p.textContent="Todavía no hay mensajes. Escribí el primero.";log.appendChild(p);return}
+ list.forEach(m=>{const off=m.hidden||banned.has(m.uid);
+  const d=document.createElement("div");d.className="msg"+(user&&m.uid===user.uid?" me":"")+(off?" off":"");
+  const b=document.createElement("b");b.textContent=m.nick||"Jugador";
+  const t=document.createElement("span");t.textContent=m.text;
+  const s=document.createElement("small");s.textContent=" "+(m.ts&&m.ts.toDate?m.ts.toDate().toLocaleTimeString("es",{hour:"2-digit",minute:"2-digit"}):"");
+  d.append(b,t,s);
+  if(mod){const a=document.createElement("div");a.className="act";
+   const h=document.createElement("button");h.textContent=m.hidden?"Restaurar mensaje":"Ocultar mensaje";
+   h.onclick=()=>updateDoc(m.ref,{hidden:!m.hidden}).catch(()=>note("No se pudo moderar."));a.appendChild(h);
+   if(m.uid!==user.uid){const k=document.createElement("button");k.textContent=banned.has(m.uid)?"Desbloquear usuario":"Bloquear usuario";
+    k.onclick=()=>(banned.has(m.uid)?deleteDoc(doc(db,"banned",m.uid)):setDoc(doc(db,"banned",m.uid),{ts:Date.now()})).catch(()=>note("No se pudo moderar."));a.appendChild(k)}
+   d.appendChild(a)}
+  log.appendChild(d)});
+ log.scrollTop=log.scrollHeight}
 
-// ---------- Salas privadas ----------
-async function cargarSalas(){
-  const { data } = await sb.from('sala_miembros').select('salas(id,nombre,creador_apodo)').eq('user_id', me.id);
-  const bs = (data || []).filter(x => x.salas).map(x => { const s = x.salas; salasInfo[s.id] = s;
-    const b = btn('🔒 ' + s.nombre + (s.creador_apodo === me.apodo ? '' : ' (@' + s.creador_apodo + ')'), '', () => irA('sala', s.id)); b.dataset.k = 'sala' + s.id; return b; });
-  $('salas').replaceChildren(btn('＋ Crear sala', 'go', () => abrirSala(true)), btn('🔑 Entrar a sala', 'go', () => abrirSala(false)), ...bs);
-  document.querySelectorAll('#salas button').forEach(b => b.classList.toggle('on', b.dataset.k === act.t + act.id));
-}
-let crear = true;
-function abrirSala(c){
-  crear = c; $('sh').textContent = c ? 'Crear sala privada' : 'Entrar a una sala privada';
-  $('i1').placeholder = c ? 'Nombre de la sala' : 'Apodo del creador de la sala'; $('i1').maxLength = c ? 30 : 16;
-  $('i1').value = ''; $('i2').value = ''; $('sgo').textContent = c ? 'Crear sala' : 'Entrar';
-  $('smsg2').textContent = ''; $('sm').classList.remove('hide'); $('i1').focus();
-}
-$('scancel').onclick = () => $('sm').classList.add('hide');
-$('sf').onsubmit = async e => {
-  e.preventDefault(); const m = $('smsg2'); m.textContent = '';
-  const a = $('i1').value.trim(), clave = $('i2').value;
-  const { data, error } = crear ? await sb.rpc('crear_sala', { n: a, clave }) : await sb.rpc('unirse_sala', { ap: a.replace(/^@/, ''), clave });
-  if (error) return m.textContent = error.message;
-  if (!data) return m.textContent = 'Apodo o contraseña incorrectos.';
-  $('sm').classList.add('hide'); await cargarSalas(); irA('sala', data);
-  if (crear) alert('Sala creada. Para entrar, tus amigos necesitan tu apodo (@' + me.apodo + ') y la contraseña que elegiste.');
-};
+let cd=null;
+function cool(){clearInterval(cd);const b=$("btn");
+ const tick=()=>{const s=Math.ceil((next-Date.now())/1000);
+  if(s>0){b.disabled=true;b.textContent=s+" s"}else{clearInterval(cd);b.disabled=false;b.textContent="Enviar"}};
+ tick();cd=setInterval(tick,250)}
+cool();
+$("f").onsubmit=async e=>{e.preventDefault();
+ const text=$("txt").value.trim();if(!text||!user)return;
+ if(banned.has(user.uid)){note("Los moderadores bloquearon tu cuenta.");return}
+ const w=Math.ceil((next-Date.now())/1000);if(w>0){note("Esperá "+w+" s para enviar otro mensaje.");return}
+ next=Date.now()+5000;try{localStorage.setItem("next",next)}catch(x){}
+ $("txt").value="";note("");cool();
+ try{await addDoc(collection(db,"rooms",cur.id,"msgs"),{text:text.slice(0,300),nick,uid:user.uid,ts:serverTimestamp()})}
+ catch(x){$("txt").value=text;next=0;cool();note("No se pudo enviar. Probá de nuevo.")}};
 
-// ---------- Menú de administrador (el servidor lo vuelve a verificar con RLS) ----------
-async function log(accion, objetivo, detalle){ await sb.from('acciones_admin').insert({ admin_id: me.id, accion, objetivo, detalle }); }
-async function borrar(id){
-  if (!confirm('¿Borrar este mensaje?')) return;
-  await sb.from('mensajes').update({ eliminado: true }).eq('id', id); await log('borrar_mensaje', 'mensaje ' + id, ''); $('m' + id)?.remove();
-  if (!$('panel').classList.contains('hide')) tab('mensajes');
-}
-async function hacerMod(u){
-  const v = !u.es_moderador; if (!confirm((v ? 'Dar' : 'Quitar') + ' el rol de moderador a @' + u.apodo + '?')) return;
-  await sb.from('perfiles').update({ es_moderador: v }).eq('id', u.id); await log(v ? 'dar_moderador' : 'quitar_moderador', '@' + u.apodo, ''); tab('usuarios');
-}
-async function banear(u, ban){
-  let motivo = null;
-  if (ban) { motivo = prompt('Motivo del ban para @' + u.apodo); if (motivo === null) return; }
-  await sb.from('perfiles').update({ baneado: ban, motivo_ban: motivo }).eq('id', u.id);
-  await log(ban ? 'banear' : 'desbanear', '@' + u.apodo, motivo || ''); tab('usuarios');
-}
-$('adminBtn').onclick = () => { $('panel').classList.remove('hide'); tab('pendientes'); };
-$('panel').onclick = e => { if (e.target.id === 'panel') $('panel').classList.add('hide'); };
-
-async function tab(t){
-  const body = $('pbody'); const bar = el('div', 'tabs');
-  [['pendientes','Pendientes'],['activos','Activos'],['usuarios','Usuarios'],['salas','Salas'],['mensajes','Mensajes'],['reportes','Reportes'],['historial','Historial'],['stats','Estadísticas'],['anuncios','Anuncios'],['contenido','Contenido'],['donaciones','Donaciones']].filter(([k]) => me.es_admin || ['pendientes','salas','mensajes','reportes'].includes(k))
-    .forEach(([k, n]) => bar.append(btn(n, k === t ? 'on' : '', () => tab(k))));
-  body.replaceChildren(el('h2', '', 'Panel de administración'), bar);
-  const lista = el('div'); body.append(lista);
-  if (t === 'donaciones') {
-    const f = el('form'); f.style.cssText = 'display:grid;gap:6px;margin:10px 0';
-    const ap = el('input'); ap.placeholder = 'Apodo del donante'; ap.required = true; ap.maxLength = 17;
-    const mo = el('input'); mo.type = 'number'; mo.placeholder = 'Monto (pesos)'; mo.min = '1'; mo.step = '0.01'; mo.required = true;
-    const l1 = el('label', 'chk'), v = el('input'); v.type = 'checkbox'; v.checked = true; l1.append(v, el('span', '', 'Aparece en la tabla de donantes'));
-    const l2 = el('label', 'chk'), mm = el('input'); mm.type = 'checkbox'; l2.append(mm, el('span', '', 'Mostrar el monto'));
-    f.append(ap, mo, l1, l2, el('button', 'go', 'Registrar donación'));
-    f.onsubmit = async e => { e.preventDefault();
-      const { error } = await sb.rpc('registrar_donacion', { ap: ap.value.trim().replace(/^@/, ''), monto: +mo.value, vis: v.checked, ver: mm.checked });
-      if (error) return alert(error.message);
-      await log('donacion', '@' + ap.value.trim().replace(/^@/, ''), '$' + mo.value); tab('donaciones'); };
-    lista.append(f);
-    const { data } = await sb.from('donaciones').select('id, monto, creado, perfiles(apodo)').order('creado', { ascending: false }).limit(50);
-    if (!data?.length) lista.append(el('p', '', 'Todavía no registraste donaciones.'));
-    (data || []).forEach(d => { const r = el('div', 'row'); const sp = el('span', '', '@' + (d.perfiles?.apodo || '?') + ' · $' + Number(d.monto).toLocaleString('es-AR'));
-      sp.append(el('small', '', new Date(d.creado).toLocaleString('es')));
-      r.append(sp, btn('Borrar', 'bad', async () => { if (!confirm('¿Borrar esta donación?')) return; await sb.from('donaciones').delete().eq('id', d.id); tab('donaciones'); })); lista.append(r); });
-  }
-  if (t === 'pendientes') {
-    const { data, error } = await sb.rpc('cuentas_pendientes');
-    if (error || !data?.length) lista.append(el('p', '', 'No hay cuentas pendientes.'));
-    (data || []).forEach(u => { const r = el('div', 'row'); const sp = el('span', '', '@' + u.apodo);
-      sp.append(el('small', '', 'Se registró el ' + new Date(u.creado).toLocaleString('es')));
-      r.append(sp,
-        btn('Aprobar', 'go', async () => { await sb.rpc('aprobar_cuenta', { u: u.id, ok: true }); await log('aprobar', '@' + u.apodo, ''); tab('pendientes'); }),
-        btn('Rechazar', 'bad', async () => { if (!confirm('¿Rechazar a @' + u.apodo + '? Su cuenta quedará suspendida.')) return; await sb.rpc('aprobar_cuenta', { u: u.id, ok: false }); await log('rechazar', '@' + u.apodo, ''); tab('pendientes'); }));
-      lista.append(r); });
-  }
-  if (t === 'activos') {
-    const desde = new Date(Date.now() - 5 * 60000).toISOString();
-    const { data } = await sb.from('perfiles').select('*').gt('ultimo_acceso', desde).order('ultimo_acceso', { ascending: false });
-    lista.append(el('p', '', (data?.length || 0) + ' usuarios activos en los últimos 5 minutos'));
-    (data || []).forEach(u => { const r = el('div', 'row'); r.append(el('span', '', '@' + u.apodo)); r.append(el('small', '', hora(u.ultimo_acceso))); lista.append(r); });
-  }
-  if (t === 'usuarios') {
-    const q = el('input'); q.placeholder = 'Buscar apodo…'; lista.before(q);
-    const { data } = await sb.from('perfiles').select('*').order('creado', { ascending: false }).limit(300);
-    const dibuja = () => { lista.replaceChildren(); data.filter(u => u.apodo.toLowerCase().includes(q.value.toLowerCase())).forEach(u => {
-      const r = el('div', 'row'); const s = el('span', '', '@' + u.apodo + ' ');
-      if (u.es_moderador) s.append(el('span', 'tag', 'mod'), ' ');
-      if (u.baneado) { s.append(el('span', 'tag', 'baneado')); s.append(el('small', '', u.motivo_ban || '')); }
-      r.append(s);
-      if (!u.es_admin) r.append(btn(u.es_moderador ? 'Quitar mod' : 'Hacer mod', '', () => hacerMod(u)), btn('Avisar', '', () => sancion({ user_id: u.id, apodo: u.apodo }, 'aviso')), btn('Silenciar', '', () => sancion({ user_id: u.id, apodo: u.apodo }, 'silencio')), u.baneado ? btn('Desbanear', 'go', () => banear(u, false)) : btn('Banear', 'bad', () => banear(u, true)));
-      lista.append(r); }); };
-    q.oninput = dibuja; dibuja();
-  }
-  if (t === 'stats') {
-    const c = async (tb, f) => { let q = sb.from(tb).select('*', { count: 'exact', head: true }); if (f) q = f(q); const { count } = await q; return count ?? 0; };
-    const h7 = new Date(Date.now() - 7 * 864e5).toISOString(), hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-    const filas = [['Usuarios en total', await c('perfiles')], ['Usuarios nuevos (7 días)', await c('perfiles', q => q.gte('creado', h7))],
-      ['Mensajes hoy', await c('mensajes', q => q.gte('creado', hoy.toISOString()))], ['Mensajes (7 días)', await c('mensajes', q => q.gte('creado', h7))],
-      ['Reportes pendientes', await c('reportes', q => q.eq('resuelto', false))], ['Salas privadas', await c('salas', q => q.eq('cerrada', false))]];
-    filas.forEach(([n, v]) => { const r = el('div', 'row'); r.append(el('span', '', n), el('b', '', String(v))); lista.append(r); });
-    const mr = el('div', 'row'); mr.append(el('span', '', 'Modo mantenimiento: ' + (mant ? 'ACTIVADO' : 'apagado')),
-      btn(mant ? 'Apagar' : 'Activar', mant ? 'go' : 'bad', async () => { await sb.from('ajustes').update({ valor: String(!mant) }).eq('clave', 'mantenimiento'); await log('mantenimiento', String(!mant), ''); await cargarAjustes(); tab('stats'); }));
-    lista.append(mr);
-  }
-  if (t === 'anuncios') {
-    const i = el('input'); i.placeholder = 'Nuevo anuncio para todos'; i.maxLength = 200;
-    lista.append(i, btn('Publicar', 'go', async () => { const v = i.value.trim(); if (!v) return; await sb.from('anuncios').update({ activo: false }).eq('activo', true); await sb.from('anuncios').insert({ texto: v }); await log('anuncio', v, ''); await cargarAjustes(); tab('anuncios'); }),
-      btn('Quitar el anuncio actual', '', async () => { await sb.from('anuncios').update({ activo: false }).eq('activo', true); await cargarAjustes(); tab('anuncios'); }));
-  }
-  if (t === 'contenido') {
-    const f = el('form'); f.style.cssText = 'display:grid;gap:6px;margin:10px 0';
-    const ca = el('select'); catsList.forEach(c => ca.append(new Option(c.nombre, c.id)));
-    const ti = el('select'); [['guia', 'Guía'], ['noticia', 'Noticia'], ['codigo', 'Código']].forEach(([v, n]) => ti.append(new Option(n, v)));
-    const tt = el('input'); tt.placeholder = 'Título'; tt.required = true; tt.maxLength = 80;
-    const tx = el('textarea'); tx.placeholder = 'Texto'; tx.required = true; tx.rows = 4; tx.maxLength = 1500;
-    f.append(ca, ti, tt, tx, el('button', 'go', 'Publicar'));
-    f.onsubmit = async e => { e.preventDefault(); await sb.from('contenido').insert({ categoria: ca.value, tipo: ti.value, titulo: tt.value.trim(), texto: tx.value.trim() }); await log('contenido', tt.value.trim(), ''); tab('contenido'); };
-    lista.append(f);
-    const { data } = await sb.from('contenido').select('*').order('creado', { ascending: false }).limit(50);
-    (data || []).forEach(c => { const r = el('div', 'row'); const sp = el('span', '', c.titulo); sp.append(el('small', '', c.tipo + ' · ' + c.categoria));
-      r.append(sp, btn('Borrar', 'bad', async () => { await sb.from('contenido').delete().eq('id', c.id); tab('contenido'); })); lista.append(r); });
-  }
-  if (t === 'salas') {
-    const { data } = await sb.from('salas').select('*').order('creado', { ascending: false }).limit(200);
-    if (!data?.length) lista.append(el('p', '', 'No hay salas privadas.'));
-    (data || []).forEach(sa => { const r = el('div', 'row'); const sp = el('span', '', '🔒 ' + sa.nombre + (sa.cerrada ? ' (cerrada)' : ''));
-      sp.append(el('small', '', 'Creada por @' + sa.creador_apodo + ' · ' + new Date(sa.creado).toLocaleDateString('es')));
-      r.append(sp, btn('Ver (solo lectura)', 'go', () => { $('panel').classList.add('hide'); irA('sala', sa.id, true); })); lista.append(r); });
-  }
-  if (t === 'mensajes') {
-    const { data } = await sb.from('mensajes').select('*, salas(nombre,creador_apodo)').eq('eliminado', false).order('creado', { ascending: false }).limit(100);
-    (data || []).forEach(m => { const r = el('div', 'row'); const s = el('span', '', m.texto); s.append(el('small', '', '@' + m.apodo + ' · ' + (m.salas ? 'sala «' + m.salas.nombre + '» de @' + m.salas.creador_apodo : m.categoria) + ' · ' + hora(m.creado)));
-      r.append(s); if (m.audio_path) r.append(audioBtn(m.audio_path)); r.append(btn('Eliminar', 'bad', () => borrar(m.id))); if (m.user_id) r.append(btn('Avisar', '', () => sancion(m, 'aviso')), btn('Silenciar', '', () => sancion(m, 'silencio'))); lista.append(r); });
-  }
-  if (t === 'reportes') {
-    const { data } = await sb.from('reportes').select('*, mensajes(id, texto, apodo, eliminado, user_id, audio_path)').eq('resuelto', false).order('creado', { ascending: false }).limit(100);
-    if (!data?.length) lista.append(el('p', '', 'No hay reportes.'));
-    (data || []).forEach(x => { const m = x.mensajes; const r = el('div', 'row'); const s = el('span', '', m ? m.texto : x.motivo);
-      s.append(el('small', '', m ? '@' + m.apodo + ' · ' + x.motivo : '')); r.append(s); if (m?.audio_path) r.append(audioBtn(m.audio_path));
-      if (m && m.user_id) r.append(btn('Avisar', '', () => sancion(m, 'aviso')), btn('Silenciar', '', () => sancion(m, 'silencio')));
-      r.append(btn('Resuelto', '', async () => { await sb.from('reportes').update({ resuelto: true }).eq('id', x.id); tab('reportes'); }));
-      if (m && !m.eliminado) r.append(btn('Eliminar', 'bad', async () => { await borrar(m.id); tab('reportes'); })); lista.append(r); });
-  }
-  if (t === 'historial') {
-    const { data } = await sb.from('acciones_admin').select('*').order('creado', { ascending: false }).limit(100);
-    (data || []).forEach(a => { const r = el('div', 'row'); const s = el('span', '', a.accion + ' · ' + a.objetivo); s.append(el('small', '', (a.detalle || '') + ' ' + new Date(a.creado).toLocaleString('es'))); r.append(s); lista.append(r); });
-  }
-}
-
-// ---------- Mejoras: bloqueos, reacciones, avisos, cuenta, eventos, guías, ayuda ----------
-function hoja(t){ const b = $('pbody'); b.replaceChildren(el('h2', '', t)); $('panel').classList.remove('hide'); return b; }
-const AVATARES = ['🙂','😎','🤖','👾','🐱','🐶','🦊','🐸','🐼','🦄','🐉','🚀'];
-
-async function cargarAjustes(){
-  const [a, m] = await Promise.all([
-    sb.from('anuncios').select('texto').eq('activo', true).order('creado', { ascending: false }).limit(1),
-    sb.from('ajustes').select('valor').eq('clave', 'mantenimiento').single()]);
-  mant = m.data?.valor === 'true';
-  const t = [mant ? '🔧 Chat en mantenimiento: solo lectura por ahora.' : '', a.data?.[0]?.texto || ''].filter(Boolean).join(' · ');
-  $('aviso').textContent = t; $('aviso').classList.toggle('hide', !t);
-}
-async function motivoBloqueo(){
-  if (mant && !(me.es_admin || me.es_moderador)) return 'El chat está en mantenimiento.';
-  const { data } = await sb.from('perfiles').select('silenciado_hasta,baneado').eq('id', me.id).single();
-  if (data?.baneado) return 'Tu cuenta está suspendida.';
-  if (data?.silenciado_hasta && new Date(data.silenciado_hasta) > new Date()) return 'Estás silenciado hasta las ' + hora(data.silenciado_hasta) + '.';
-  return 'Tu cuenta no puede escribir.';
-}
-async function contarNotif(){
-  const { count } = await sb.from('notificaciones').select('*', { count: 'exact', head: true }).eq('leida', false);
-  $('bell').textContent = '🔔' + (count ? ' ' + count : '');
-}
-async function verNotif(){
-  const b = hoja('Notificaciones');
-  const { data } = await sb.from('notificaciones').select('*').order('creado', { ascending: false }).limit(30);
-  if (!data?.length) b.append(el('p', '', 'No tienes notificaciones.'));
-  (data || []).forEach(n => { const r = el('div', 'row'); const sp = el('span', '', n.texto); sp.append(el('small', '', new Date(n.creado).toLocaleString('es'))); r.append(sp); b.append(r); });
-  await sb.from('notificaciones').update({ leida: true }).eq('user_id', me.id).eq('leida', false); contarNotif();
-}
-
-async function cargarReac(){
-  const ids = [...document.querySelectorAll('.rx')].map(x => +x.dataset.id); if (!ids.length) return;
-  const { data } = await sb.from('reacciones').select('mensaje_id, user_id, emoji').in('mensaje_id', ids);
-  const c = {}; (data || []).forEach(r => { const k = r.mensaje_id + r.emoji; c[k] = c[k] || { n: 0, yo: false }; c[k].n++; if (r.user_id === me.id) c[k].yo = true; });
-  document.querySelectorAll('.rx').forEach(x => x.querySelectorAll('button').forEach(b => { const v = c[x.dataset.id + b.dataset.e]; b.textContent = b.dataset.e + (v ? ' ' + v.n : ''); b.classList.toggle('on', !!v?.yo); }));
-}
-async function reaccionar(id, emoji){
-  const { data } = await sb.from('reacciones').select('emoji').eq('mensaje_id', id).eq('user_id', me.id).eq('emoji', emoji);
-  if (data?.length) await sb.from('reacciones').delete().match({ mensaje_id: id, user_id: me.id, emoji });
-  else await sb.from('reacciones').insert({ mensaje_id: id, user_id: me.id, emoji });
-  cargarReac();
-}
-async function bloquear(id, apodo){
-  if (!id || !confirm('¿Bloquear a @' + apodo + '? Ya no verás sus mensajes.')) return;
-  await sb.from('bloqueos').insert({ user_id: me.id, bloqueado_id: id, apodo }); bloq.add(id); irA(act.t, act.id, act.ro);
-}
-async function buscar(){
-  const q = prompt('Buscar en este chat:'); if (!q) return;
-  const col = act.t === 'cat' ? 'categoria' : 'sala_id';
-  const { data } = await sb.from('mensajes').select('*').eq(col, act.id).eq('eliminado', false).ilike('texto', '%' + q.replace(/[%_]/g, '') + '%').order('creado', { ascending: false }).limit(50);
-  $('msgs').replaceChildren(btn('← Volver al chat', 'go', () => irA(act.t, act.id, act.ro)), el('p', '', (data?.length || 0) + ' resultados'));
-  (data || []).reverse().forEach(pintar);
-}
-async function sancion(m, tipo){
-  let mins = 0;
-  if (tipo === 'silencio') { mins = +prompt('¿Cuántos minutos silenciar a @' + m.apodo + '? (60 = 1 hora, 1440 = 1 día)', '60'); if (!mins) return; }
-  const mot = prompt('Motivo:'); if (mot === null) return;
-  const { error } = await sb.rpc('sancionar', { u: m.user_id, t: tipo, mins, mot });
-  if (error) return alert(error.message);
-  await log(tipo === 'aviso' ? 'avisar' : 'silenciar', '@' + m.apodo, mot + (mins ? ' (' + mins + ' min)' : '')); alert('Listo.');
-}
-
-async function cuenta(){
-  const b = hoja('Mi cuenta');
-  const av = el('div', 'row'); AVATARES.forEach(a => av.append(btn(a, a === me.avatar ? 'go' : '', async () => { await sb.rpc('cambiar_avatar', { a }); me.avatar = a; cuenta(); })));
-  b.append(el('h3', '', 'Mi avatar'), av);
-  const { data: avs } = await sb.from('avisos').select('id').eq('user_id', me.id);
-  b.append(el('p', '', 'Avisos recibidos: ' + (avs?.length || 0) + ' de 3. Con 3 avisos la cuenta se suspende.'));
-  const ap = el('input'); ap.placeholder = 'Nuevo apodo (solo una vez al mes)'; ap.maxLength = 16;
-  b.append(el('h3', '', 'Cambiar apodo'), ap, btn('Cambiar', 'go', async () => {
-    const { error } = await sb.rpc('cambiar_apodo', { nuevo: ap.value.trim() }); if (error) return alert(error.message);
-    me.apodo = ap.value.trim(); $('yo').textContent = me.apodo; await cargarSalas(); cuenta(); }));
-  b.append(el('h3', '', 'Usuarios bloqueados'));
-  const { data: bl } = await sb.from('bloqueos').select('*');
-  if (!bl?.length) b.append(el('p', '', 'No has bloqueado a nadie.'));
-  (bl || []).forEach(x => { const r = el('div', 'row'); r.append(el('span', '', '@' + x.apodo),
-    btn('Desbloquear', '', async () => { await sb.from('bloqueos').delete().match({ user_id: me.id, bloqueado_id: x.bloqueado_id }); bloq.delete(x.bloqueado_id); cuenta(); })); b.append(r); });
-  b.append(el('h3', '', 'Seguridad'),
-    btn('Cambiar contraseña (por correo)', '', async () => { await sb.auth.resetPasswordForEmail(me.email, { redirectTo: location.origin + location.pathname }); alert('Te enviamos un correo para cambiarla.'); }),
-    btn('Borrar mi cuenta', 'bad', borrarCuenta));
-}
-async function borrarCuenta(){
-  if (prompt('Se borrará tu cuenta para siempre, junto con tus salas. Para confirmar escribe tu apodo: ' + me.apodo) !== me.apodo) return;
-  const { error } = await sb.rpc('borrar_mi_cuenta'); if (error) return alert(error.message);
-  await sb.auth.signOut(); location.reload();
-}
-function nuevaClave(){
-  const b = hoja('Nueva contraseña'); const i = el('input'); i.type = 'password'; i.placeholder = 'Nueva contraseña (mínimo 8)'; i.minLength = 8;
-  b.append(i, btn('Guardar', 'go', async () => { const { error } = await sb.auth.updateUser({ password: i.value }); if (error) return alert(error.message); alert('Contraseña cambiada.'); $('panel').classList.add('hide'); }));
-}
-sb.auth.onAuthStateChange(ev => { if (ev === 'PASSWORD_RECOVERY') nuevaClave(); });
-$('olvide').onclick = async e => {
-  e.preventDefault(); const m = $('amsg'); const email = $('email').value.trim();
-  if (!email) { m.className = 'msgbox'; return m.textContent = 'Escribe tu correo arriba y vuelve a tocar el enlace.'; }
-  await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin + location.pathname });
-  m.className = 'msgbox ok'; m.textContent = 'Si el correo existe, te enviamos un enlace para cambiar la contraseña.';
-};
-
-async function opcionesSala(){
-  const id = act.id, b = hoja('Mi sala: ' + (salasInfo[id]?.nombre || ''));
-  b.append(el('p', '', 'Si expulsas a alguien, cambia también la contraseña para que no pueda volver a entrar.'));
-  const { data } = await sb.rpc('miembros_sala', { s: id });
-  (data || []).forEach(m => { const r = el('div', 'row'); r.append(el('span', '', '@' + m.ap));
-    if (m.uid !== me.id) r.append(btn('Expulsar', 'bad', async () => { if (!confirm('¿Expulsar a @' + m.ap + '?')) return; await sb.rpc('expulsar_de_sala', { s: id, u: m.uid }); opcionesSala(); })); b.append(r); });
-  b.append(el('h3', '', 'Ajustes de la sala'),
-    btn('Cambiar contraseña', 'go', async () => { const n = prompt('Nueva contraseña (mínimo 4)'); if (!n) return; const { error } = await sb.rpc('cambiar_clave_sala', { s: id, nueva: n }); alert(error ? error.message : 'Contraseña cambiada.'); }),
-    btn('Cerrar sala', 'bad', async () => { if (!confirm('¿Cerrar la sala? Nadie podrá volver a entrar.')) return; const { error } = await sb.rpc('cerrar_sala', { s: id }); if (error) return alert(error.message); $('panel').classList.add('hide'); await cargarSalas(); irA('cat', 'roblox'); }));
-}
-
-function barraRank(sel){
-  const bar = el('div', 'tabs');
-  [[7, 'Semana'], [30, 'Mes'], [365, 'Año'], ['don', '💛 Donantes']].forEach(([d, n]) => bar.append(btn(n, d === sel ? 'on' : '', () => ranking(d))));
-  return bar;
-}
-async function donantes(){
-  const b = hoja('💛 Donantes');
-  b.append(barraRank('don'), el('p', '', 'Gracias a quienes apoyan la página. Donar es voluntario; cada persona elige si aparece y si se muestra el monto. Al donar, escribe tu apodo en el motivo o mensaje de la transferencia.'));
-  if (ALIAS_APOYO) { const r = el('div', 'row'); const cp = btn('Copiar', 'go', async () => { try { await navigator.clipboard.writeText(ALIAS_APOYO); cp.textContent = '¡Copiado!'; } catch { cp.textContent = 'Copia el alias a mano'; } });
-    r.append(el('span', '', '💛 Alias para transferir: ' + ALIAS_APOYO), cp); b.append(r); }
-  if (LINK_APOYO) { const a = el('a', '', '💛 Apoyar la página'); a.href = LINK_APOYO; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.style.color = 'var(--lime)'; b.append(a); }
-  const { data, error } = await sb.rpc('ranking_donantes');
-  if (error || !data?.length) { b.append(el('p', '', 'Todavía no hay donantes en la tabla.')); return; }
-  data.forEach((u, i) => { const r = el('div', 'row');
-    r.append(el('span', '', (['🥇', '🥈', '🥉'][i] || (i + 1) + '.') + ' ' + u.av + ' @' + u.ap + (u.ap === me.apodo ? ' (tú)' : '')),
-      el('b', '', u.total != null ? '$' + Number(u.total).toLocaleString('es-AR') : '💛')); b.append(r); });
-}
-async function ranking(dias){
-  if (dias === 'don') return donantes();
-  const b = hoja('🏆 Usuarios más activos'); const bar = barraRank(dias);
-  b.append(bar, el('p', '', 'Cuenta los mensajes en los chats públicos (máximo 50 por día, para que el spam no sirva).'));
-  const { data, error } = await sb.rpc('ranking_activos', { dias });
-  if (error || !data?.length) { b.append(el('p', '', 'Todavía no hay datos para este periodo.')); return; }
-  data.forEach((u, i) => { const r = el('div', 'row');
-    r.append(el('span', '', (['🥇', '🥈', '🥉'][i] || (i + 1) + '.') + ' ' + u.av + ' @' + u.ap + (u.ap === me.apodo ? ' (tú)' : '')), el('b', '', u.pts + ' pts')); b.append(r); });
-}
-async function eventos(){
-  const b = hoja('Eventos y torneos');
-  const f = el('form'); f.style.cssText = 'display:grid;gap:6px;margin-bottom:12px';
-  const ti = el('input'); ti.placeholder = 'Título (ej. Torneo de Bed Wars)'; ti.required = true; ti.minLength = 3; ti.maxLength = 60;
-  const ca = el('select'); catsList.forEach(c => ca.append(new Option(c.nombre, c.id)));
-  const fe = el('input'); fe.type = 'datetime-local'; fe.required = true;
-  const de = el('input'); de.placeholder = 'Descripción corta (opcional)'; de.maxLength = 300;
-  f.append(el('h3', '', 'Organiza un evento'), ti, ca, fe, de, el('button', 'go', 'Publicar evento'));
-  f.onsubmit = async e => { e.preventDefault();
-    const { error } = await sb.from('eventos').insert({ categoria: ca.value, titulo: ti.value.trim(), descripcion: de.value.trim(), fecha: new Date(fe.value).toISOString(), creador_id: me.id, creador_apodo: me.apodo });
-    if (error) return alert('No se pudo publicar. Revisa que la fecha sea futura y que no tengas ya 3 eventos.'); eventos(); };
-  b.append(f);
-  const { data } = await sb.from('eventos').select('*').gt('fecha', new Date().toISOString()).order('fecha').limit(50);
-  if (!data?.length) b.append(el('p', '', 'No hay eventos próximos.'));
-  (data || []).forEach(v => { const r = el('div', 'row'); const sp = el('span', '', v.titulo);
-    sp.append(el('small', '', (catsList.find(c => c.id === v.categoria)?.nombre || '') + ' · ' + new Date(v.fecha).toLocaleString('es') + ' · @' + v.creador_apodo + (v.descripcion ? ' · ' + v.descripcion : '')));
-    r.append(sp); if (v.creador_id === me.id || me.es_admin || me.es_moderador) r.append(btn('Borrar', 'bad', async () => { await sb.from('eventos').delete().eq('id', v.id); eventos(); })); b.append(r); });
-}
-async function guias(){
-  const b = hoja('Guías, noticias y códigos');
-  let q = sb.from('contenido').select('*').order('creado', { ascending: false }).limit(40); if (act.t === 'cat') q = q.eq('categoria', act.id);
-  const { data } = await q;
-  if (!data?.length) b.append(el('p', '', 'Todavía no hay contenido aquí.'));
-  (data || []).forEach(c => { const d = el('div', 'm'); d.style.margin = '8px 0'; const tx = el('div', '', c.texto); tx.style.whiteSpace = 'pre-wrap';
-    d.append(el('b', '', ({ guia: '📘 ', noticia: '📰 ', codigo: '🎁 ' })[c.tipo] + c.titulo), tx); b.append(d); });
-}
-function ayuda(){
-  const b = hoja('Ayuda');
-  b.append(el('p', '', 'Si alguien te hace sentir mal, te pide fotos, tu dirección o que hables por otra app, no respondas y cuéntaselo a un adulto de confianza. Si estás en peligro, llama a los servicios de emergencia de tu país.'));
-  const t = el('textarea'); t.placeholder = 'Cuéntanos qué pasó (lo verá un moderador)'; t.rows = 4; t.maxLength = 500;
-  b.append(t, btn('Enviar a un moderador', 'go', async () => { if (!t.value.trim()) return; await sb.from('reportes').insert({ reportado_por: me.id, motivo: 'AYUDA: ' + t.value.trim() }); alert('Enviado. Gracias.'); $('panel').classList.add('hide'); }));
-}
-$('bBuscar').onclick = buscar; $('bEv').onclick = eventos; $('bGuia').onclick = guias; $('bSala').onclick = opcionesSala;
-$('bRank').onclick = () => ranking(7); $('bAyuda').onclick = ayuda; $('yo').onclick = cuenta; $('bell').onclick = verNotif;
-
-
-// ---------- Mensajes de voz (solo salas privadas) ----------
-const MAX_VOZ = 60;
-let rec = null;
-function resetMic(){ $('mic').textContent = '🎤'; $('mic').classList.remove('bad'); $('micX').classList.add('hide'); }
-async function grabar(){
-  if (rec) return rec.parar();                       // segundo toque = enviar
-  if (act.t !== 'sala' || act.ro) return;
-  if (!navigator.mediaDevices || !window.MediaRecorder) { $('smsg').textContent = 'Tu navegador no permite grabar audio. '; return; }
-  let stream;
-  try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
-  catch { $('smsg').textContent = 'No se pudo usar el micrófono. Revisa el permiso del navegador. '; return; }
-  const tipo = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg'].find(t => MediaRecorder.isTypeSupported(t));
-  const mr = new MediaRecorder(stream, tipo ? { mimeType: tipo, audioBitsPerSecond: 32000 } : { audioBitsPerSecond: 32000 });
-  const trozos = [], sala = act.id, t0 = Date.now(); let cancelado = false, tick = null;
-  mr.ondataavailable = e => { if (e.data.size) trozos.push(e.data); };
-  mr.onstop = async () => {
-    clearInterval(tick); stream.getTracks().forEach(t => t.stop()); rec = null; resetMic();
-    if (cancelado || Date.now() - t0 < 700) return;
-    await enviarVoz(new Blob(trozos, { type: mr.mimeType }), sala);
-  };
-  const parar = () => { if (mr.state !== 'inactive') mr.stop(); };
-  rec = { parar, cancelar: () => { cancelado = true; parar(); } };
-  $('smsg').textContent = ''; $('mic').classList.add('bad'); $('micX').classList.remove('hide');
-  const marca = () => { const s = Math.floor((Date.now() - t0) / 1000); $('mic').textContent = '⏹ Enviar ' + s + 's'; if (s >= MAX_VOZ) parar(); };
-  tick = setInterval(marca, 250); marca(); mr.start();
-}
-async function enviarVoz(blob, sala){
-  const m = $('smsg'); m.textContent = 'Enviando audio… ';
-  const tipo = (blob.type || 'audio/webm').split(';')[0];
-  const ext = tipo.includes('mp4') ? 'm4a' : tipo.includes('ogg') ? 'ogg' : 'webm';
-  const ruta = sala + '/' + me.id + '/' + Date.now() + '.' + ext;
-  const { error: e1 } = await sb.storage.from('audios').upload(ruta, blob, { contentType: tipo });
-  if (e1) { m.textContent = 'No se pudo subir el audio. '; return; }
-  const { error } = await sb.from('mensajes').insert({ sala_id: sala, user_id: me.id, apodo: me.apodo, avatar: me.avatar || '🙂', texto: '🎤 Mensaje de voz', audio_path: ruta });
-  if (error) { await sb.storage.from('audios').remove([ruta]); m.textContent = error.message.includes('row-level') ? await motivoBloqueo() : error.message + ' '; return; }
-  m.textContent = '';
-}
-function audioBtn(path){
-  const w = el('div');
-  const b = btn('▶ Escuchar', 'r', async () => {
-    const { data, error } = await sb.storage.from('audios').createSignedUrl(path, 300);
-    if (error || !data) { b.textContent = 'Audio no disponible'; return; }
-    const a = el('audio'); a.controls = true; a.autoplay = true; a.src = data.signedUrl; a.style.cssText = 'width:100%;margin-top:6px'; b.replaceWith(a);
-  });
-  w.append(b); return w;
-}
-$('mic').onclick = grabar; $('micX').onclick = () => rec && rec.cancelar();
-
-// ---------- Llamada de voz grupal (solo salas privadas) ----------
-// La voz pasa por LiveKit (un servidor de llamadas): los participantes no ven la IP de los demás.
-// Supabase sirve para ver quién está dentro (presencia) y, con la función "llamada", para pedir permiso.
-const LLAMADAS_ACTIVAS = true;
-const MAX_LLAMADA = 6;
-let call = null;
-
-function mirarLlamada(sala){
-  if (!LLAMADAS_ACTIVAS) return;
-  if (call && (call.sala === sala || call.dentro || call.entrando)) return pintarBarra();
-  cerrarCanalLlamada();
-  const c = call = { sala, nombre: salasInfo[sala]?.nombre || 'sala', gente: {}, dentro: false, entrando: false, listo: false, mute: false,
-    room: null, cont: null, aviso: '', sonido: false, avisoFin: false, t0: 0, horas: null, latido: null };
-  c.ch = sb.channel('llamada:' + sala, { config: { private: true, presence: { key: me.id } } });
-  c.ch.on('presence', { event: 'sync' }, () => { if (call === c) sincronizar(); })
-    .subscribe(st => { if (call !== c) return; c.listo = st === 'SUBSCRIBED'; if (st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') c.aviso = 'No se pudo conectar con la llamada.'; pintarBarra(); });
-  pintarBarra();
-}
-function limpiarMedios(c){
-  clearInterval(c.horas); clearInterval(c.latido);
-  const r = c.room; c.room = null; if (r) r.disconnect();
-  if (c.cont) { c.cont.remove(); c.cont = null; }
-}
-function cerrarCanalLlamada(){
-  if (!call) return pintarBarra();
-  const c = call; call = null; c.dentro = false; limpiarMedios(c); sb.removeChannel(c.ch); pintarBarra();
-}
-function sincronizar(){
-  const gente = {};
-  Object.values(call.ch.presenceState()).forEach(a => a.forEach(m => { if (m.uid) gente[m.uid] = m.ap; }));
-  call.gente = gente; pintarBarra();
-}
-async function textoError(error){
-  let m = 'No se pudo entrar a la llamada.';
-  try { const j = await error.context.json(); if (j && j.error) m = j.error; } catch {}
-  return m;
-}
-async function unirseLlamada(){
-  const c = call; if (!c || c.dentro || c.entrando) return;
-  if (!window.LivekitClient) { c.aviso = 'No se pudo cargar el sistema de llamadas. Recarga la página.'; return pintarBarra(); }
-  if (!navigator.mediaDevices) { c.aviso = 'Tu navegador no permite llamadas de voz.'; return pintarBarra(); }
-  if (!c.listo) { c.aviso = 'Conectando… prueba otra vez en un momento.'; return pintarBarra(); }
-  if (Object.keys(c.gente).length >= MAX_LLAMADA) { c.aviso = 'La llamada está llena (máximo ' + MAX_LLAMADA + ').'; return pintarBarra(); }
-  c.entrando = true; c.aviso = ''; pintarBarra();
-  const { data, error } = await sb.functions.invoke('clever-action', { body: { accion: 'entrar', sala: c.sala } });
-  if (call !== c) return;
-  if (error || !data || !data.token) { c.entrando = false; c.aviso = await textoError(error || {}); return pintarBarra(); }
-  const { Room, RoomEvent, Track } = LivekitClient;
-  const room = new Room();
-  c.room = room; c.cont = el('div'); c.cont.style.display = 'none'; document.body.append(c.cont);
-  room.on(RoomEvent.TrackSubscribed, t => { if (t.kind === Track.Kind.Audio && c.cont) c.cont.append(t.attach()); });
-  room.on(RoomEvent.TrackUnsubscribed, t => t.detach().forEach(x => x.remove()));
-  room.on(RoomEvent.AudioPlaybackStatusChanged, () => { if (!room.canPlaybackAudio) { c.sonido = true; pintarBarra(); } });
-  room.on(RoomEvent.Disconnected, () => { if (call === c && c.dentro) salirLlamada('Se cortó tu conexión con la llamada.'); });
-  try {
-    await room.connect(data.url, data.token);
-    await room.localParticipant.setMicrophoneEnabled(true, { echoCancellation: true, noiseSuppression: true, autoGainControl: true });
-  } catch {
-    c.entrando = false; limpiarMedios(c); c.aviso = 'No se pudo conectar. Revisa el permiso del micrófono.'; return pintarBarra();
-  }
-  if (call !== c) { limpiarMedios(c); return; }
-  c.entrando = false; c.dentro = true; c.mute = false; c.aviso = ''; c.avisoFin = false; c.t0 = Date.now();
-  try { await c.ch.track({ uid: me.id, ap: me.apodo }); } catch {}
-  c.horas = setInterval(() => { const h = Math.round((Date.now() - c.t0) / 3600000); c.aviso = '⏰ Llevas ' + h + (h === 1 ? ' hora' : ' horas') + ' en la llamada.'; pintarBarra(); }, 3600000);
-  latidoLlamada(c); c.latido = setInterval(() => latidoLlamada(c), 30000);
-  pintarBarra();
-}
-// Cada 30 s la base de datos suma el tiempo usado y dice cuánto queda
-async function latidoLlamada(c){
-  const { data } = await sb.rpc('llamada_latido', { s: c.sala });
-  if (call !== c || !c.dentro || !data) return;
-  if (data.mes_agotado) return salirLlamada('Se agotó el cupo mensual de llamadas.');
-  if (data.restante_seg !== null && data.restante_seg <= 0) return salirLlamada('⏱ Se acabó tu tiempo de llamada de hoy.');
-  if (data.restante_seg !== null && data.restante_seg <= 300 && !c.avisoFin) { c.avisoFin = true; c.aviso = '⏱ Te quedan menos de 5 minutos de llamada hoy.'; pintarBarra(); }
-}
-async function salirLlamada(msg){
-  const c = call; if (!c || !c.dentro) return;
-  c.dentro = false; c.avisoFin = false; c.sonido = false; c.aviso = typeof msg === 'string' ? msg : ''; limpiarMedios(c);
-  try { await c.ch.untrack(); } catch {}
-  if (call === c && !(act.t === 'sala' && act.id === c.sala && !act.ro)) cerrarCanalLlamada(); else pintarBarra();
-}
-async function alternarMicro(){
-  const c = call; if (!c || !c.room) return;
-  c.mute = !c.mute;
-  try { await c.room.localParticipant.setMicrophoneEnabled(!c.mute); } catch {}
-  pintarBarra();
-}
-async function expulsarDeLlamada(uid, ap){
-  if (!confirm('¿Sacar a @' + ap + ' de la llamada?')) return;
-  const { error } = await sb.functions.invoke('clever-action', { body: { accion: 'expulsar', sala: call.sala, uid } });
-  if (error) return alert(await textoError(error));
-  await log('sacar_de_llamada', '@' + ap, 'sala ' + call.sala);
-}
-async function reportarLlamada(){
-  const mot = prompt('¿Qué pasó en la llamada?'); if (!mot) return;
-  const quienes = Object.values(call.gente).map(a => '@' + a).join(', ');
-  await sb.from('reportes').insert({ reportado_por: me.id, motivo: ('LLAMADA en sala «' + call.nombre + '» (id ' + call.sala + ') con ' + quienes + ': ' + mot).slice(0, 500) });
-  alert('Gracias, lo revisaremos.');
-}
-function pintarBarra(){
-  const b = $('callbar');
-  const aqui = call && act.t === 'sala' && !act.ro && act.id === call.sala;
-  if (!call || !(call.dentro || call.entrando || aqui)) { b.classList.add('hide'); return; }
-  const nombres = Object.entries(call.gente).map(([u, a]) => '@' + a + (u === me.id ? ' (tú)' : ''));
-  b.replaceChildren();
-  if (!call.dentro) {
-    const bt = btn(call.entrando ? '📞 Conectando…' : nombres.length ? '📞 En llamada: ' + nombres.join(', ') + ' — toca para unirte' : '📞 Iniciar llamada de voz', 'go', unirseLlamada);
-    bt.disabled = call.entrando; b.append(bt);
-  } else {
-    b.append(el('span', '', '🎧 ' + (aqui ? '' : call.nombre + ': ') + nombres.join(', ')),
-      btn(call.mute ? '🔇 Micro apagado' : '🎙 Micro encendido', call.mute ? 'bad' : '', alternarMicro),
-      btn('📴 Salir', 'bad', () => salirLlamada()), btn('⚑ Reportar', '', reportarLlamada));
-    if (call.sonido) b.append(btn('🔊 Activar sonido', 'go', async () => { try { await call.room.startAudio(); } catch {} call.sonido = false; pintarBarra(); }));
-    if (me.es_admin || me.es_moderador) Object.entries(call.gente).forEach(([u, a]) => { if (u !== me.id) b.append(btn('🚪 Sacar a @' + a, 'bad', () => expulsarDeLlamada(u, a))); });
-  }
-  if (call.aviso) b.append(el('small', '', call.aviso));
-  b.classList.remove('hide');
-}
-
-// ---------- Privacidad e inicio ----------
-['priv1','priv2'].forEach(i => $(i).onclick = e => { e.preventDefault(); $('modal').classList.remove('hide'); });
-$('cierra').onclick = () => $('modal').classList.add('hide');
-$('verT').onclick = e => { e.preventDefault(); $('tm').classList.remove('hide'); };
-$('cierraT').onclick = () => $('tm').classList.add('hide');
-iniciar();
+function setMode(m){mode=m;const r=m==="reg";$("nk").hidden=!r;$("tcw").hidden=!r;$("gt").textContent=r?"Crear cuenta":"Entrar";
+ $("gb").textContent=r?"Crear cuenta":"Entrar";$("sw").textContent=r?"Ya tengo cuenta":"Crear cuenta nueva";
+ $("pw").autocomplete=r?"new-password":"current-password";er("")}
+$("sw").onclick=()=>setMode(mode==="reg"?"login":"reg");
+$("fg").onclick=async()=>{const em=$("em").value.trim();if(!em){er("Escribí tu email arriba y volvé a tocar este botón.");return}
+ try{await sendPasswordResetEmail(auth,em)}catch(x){}er("Si ese email tiene cuenta, te enviamos un enlace para cambiar la contraseña.")};
+$("out").onclick=()=>signOut(auth);
+$("gf").onsubmit=async e=>{e.preventDefault();er("");const em=$("em").value.trim(),pw=$("pw").value;$("gb").disabled=true;
+ try{
+  if(mode==="reg"){const n=$("nk").value.trim().slice(0,10),k=keyOf(n);
+   if(k.length<2){er("El nombre necesita al menos 2 letras o números.");return}
+   if(!$("tc").checked){er("Tenés que aceptar los términos.");return}
+   if((await getDoc(doc(db,"nicks",k))).exists()){er("Ese nombre ya está en uso.");return}
+   reg=true;const c=await createUserWithEmailAndPassword(auth,em,pw);
+   const b=writeBatch(db);b.set(doc(db,"nicks",k),{uid:c.user.uid});b.set(doc(db,"users",c.user.uid),{nick:n});await b.commit();
+   reg=false;enter(c.user,n)}
+  else await signInWithEmailAndPassword(auth,em,pw)
+ }catch(x){reg=false;er(ERR[x.code]||"No se pudo completar. Probá de nuevo.")}
+ finally{$("gb").disabled=false;$("pw").value=""}};
+tabs();
 </script>
 </body>
 </html>
