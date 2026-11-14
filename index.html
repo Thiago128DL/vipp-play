@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Zona Gamer</title>
+<title>Vipp Play</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/livekit-client@2.18.3/dist/livekit-client.umd.min.js"></script>
@@ -57,7 +57,7 @@ footer a{color:var(--lime);cursor:pointer}
 <body>
 
 <section id="auth">
-  <h1>Zona Gamer</h1>
+  <h1>Vipp Play</h1>
   <p style="color:var(--mut);margin:0">Habla de Roblox, Minecraft y más con otros jugadores.</p>
   <div class="tabs"><button id="tIn" class="on">Entrar</button><button id="tUp">Crear cuenta</button></div>
   <form id="f">
@@ -73,7 +73,7 @@ footer a{color:var(--lime);cursor:pointer}
 </section>
 
 <div id="app" class="hide">
-  <header><span class="brand">Zona Gamer</span><span><button id="bell">🔔</button> <button id="yo"></button> <button id="salir">Salir</button></span></header>
+  <header><span class="brand">VIPP Play</span><span><button id="bell">🔔</button> <button id="yo"></button> <button id="salir">Salir</button></span></header>
   <div><div id="aviso" class="hide"></div><nav id="cats"></nav></div>
   <div id="salas"></div>
   <div id="tools"><button id="bBuscar">🔍 Buscar</button><button id="bRank">🏆 Ranking</button><button id="bEv">📅 Eventos</button><button id="bGuia">📚 Guías</button><button id="bSala" class="hide">⚙️ Mi sala</button><button id="bAyuda" class="bad">🆘 Ayuda</button></div>
@@ -81,7 +81,7 @@ footer a{color:var(--lime);cursor:pointer}
   <div>
     <div id="callbar" class="hide"></div>
     <form id="send"><input id="txt" placeholder="Escribe un mensaje…" maxlength="500" autocomplete="off"><button type="button" id="mic" class="hide" title="Mensaje de voz (máx. 60 s)">🎤</button><button type="button" id="micX" class="hide" title="Cancelar">✖</button><button class="go">Enviar</button></form>
-    <footer><span id="smsg" style="color:var(--pink)"></span> Sé amable y no compartas datos personales. <a id="priv2">Privacidad</a></footer>
+    <footer><span id="smsg" style="color:var(--pink)"></span> Sé amable y no compartas datos personales.(obligatorio decir XD,LOL o OMG al menos 1 vez) <a id="priv2">Privacidad</a></footer>
   </div>
 </div>
 
@@ -99,7 +99,7 @@ footer a{color:var(--lime);cursor:pointer}
 <div id="tm" class="hide"><div style="max-height:85dvh;overflow-y:auto">
   <h3>Términos y condiciones</h3>
   <ol style="padding-left:20px;font-size:.95rem">
-    <li>Esta página es solo para personas de 18 años o más. Al crear tu cuenta declaras que lo eres. Si descubrimos que no, podemos suspender o eliminar tu cuenta.</li>
+    <li>Esta página es solo para personas de 18 años o más. Al crear tu cuenta declaras que lo eres. Si descubrimos que no, podemos suspender o eliminar tu cuenta.(osa que solo pasara si no escribes XD,LOLo OMG al menos 1 vez)</li>
     <li>La página aplica medidas de seguridad: correo verificado, contraseñas cifradas y moderación. Al usarla aceptas hacerlo de buena fe y cuidar tu contraseña sin compartirla.</li>
     <li>Las salas privadas son solo para quienes tengan el apodo del creador y la contraseña de la sala. Nadie más puede entrar. La única excepción son los moderadores y administradores, que pueden acceder a todas las salas, leer sus mensajes y escuchar sus mensajes de voz para hacer cumplir estas reglas y la ley. Aceptas esto al usar las salas.</li>
     <li>Las llamadas de voz de las salas privadas no se graban. Pasan por un servicio externo de llamadas, por lo que los demás participantes no ven tu dirección IP. Los moderadores pueden sacar a alguien de una llamada. Si pasa algo, usa el botón ⚑ Reportar durante la llamada. Cada persona tiene un tiempo máximo de llamada por día.</li>
@@ -109,7 +109,7 @@ footer a{color:var(--lime);cursor:pointer}
     <li>Los mensajes borrados pueden conservarse y entregarse a las autoridades si la ley lo exige.</li>
     <li>Si incumples las reglas, podemos darte avisos (3 avisos suspenden la cuenta), silenciarte por un tiempo, borrar tus mensajes o eliminar tu cuenta. Los mensajes pueden ser analizados automáticamente para detectar conductas de riesgo.</li>
     <li>Guardamos tu correo, apodo, mensajes y mensajes de voz. Tu correo nunca se muestra a otros usuarios. Si borras tu cuenta, tus mensajes se conservan sin tu apodo para fines de moderación y seguridad.</li>
-    <li>Esta página es independiente y no está afiliada a Roblox, Minecraft ni Fortnite.</li>
+    <li>Esta página es independiente y no está afiliada a Roblox, Minecraft ni Fortnite ni ninguna marca.</li>
   </ol>
   <button class="go" id="cierraT">Cerrar</button>
 </div></div>
@@ -544,7 +544,7 @@ async function guias(){
 function ayuda(){
   const b = hoja('Ayuda');
   b.append(el('p', '', 'Si alguien te hace sentir mal, te pide fotos, tu dirección o que hables por otra app, no respondas y cuéntaselo a un adulto de confianza. Si estás en peligro, llama a los servicios de emergencia de tu país.'));
-  const t = el('textarea'); t.placeholder = 'Cuéntanos qué pasó (lo verá un moderador)'; t.rows = 4; t.maxLength = 500;
+  const t = el('textarea'); t.placeholder = 'Cuéntanos qué pasó (nosotros resolveremos los problemas)'; t.rows = 4; t.maxLength = 500;
   b.append(t, btn('Enviar a un moderador', 'go', async () => { if (!t.value.trim()) return; await sb.from('reportes').insert({ reportado_por: me.id, motivo: 'AYUDA: ' + t.value.trim() }); alert('Enviado. Gracias.'); $('panel').classList.add('hide'); }));
 }
 $('bBuscar').onclick = buscar; $('bEv').onclick = eventos; $('bGuia').onclick = guias; $('bSala').onclick = opcionesSala;
