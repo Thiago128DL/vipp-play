@@ -6,6 +6,7 @@
 <title>Zona Gamer</title>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/livekit-client@2.18.3/dist/livekit-client.umd.min.js"></script>
 <style>
 :root{--bg:#15132b;--panel:#211e44;--line:#37336a;--txt:#f1efff;--mut:#a9a5d6;--lime:#b8f04b;--pink:#ff5d8f;--r:14px}
 *{box-sizing:border-box}
@@ -101,7 +102,7 @@ footer a{color:var(--lime);cursor:pointer}
     <li>Esta página es solo para personas de 18 años o más. Al crear tu cuenta declaras que lo eres. Si descubrimos que no, podemos suspender o eliminar tu cuenta.</li>
     <li>La página aplica medidas de seguridad: correo verificado, contraseñas cifradas y moderación. Al usarla aceptas hacerlo de buena fe y cuidar tu contraseña sin compartirla.</li>
     <li>Las salas privadas son solo para quienes tengan el apodo del creador y la contraseña de la sala. Nadie más puede entrar. La única excepción son los moderadores y administradores, que pueden acceder a todas las salas, leer sus mensajes y escuchar sus mensajes de voz para hacer cumplir estas reglas y la ley. Aceptas esto al usar las salas.</li>
-    <li>Las llamadas de voz de las salas privadas no se graban y los moderadores no pueden escucharlas. Si pasa algo, usa el botón ⚑ Reportar durante la llamada. Las llamadas conectan directamente a los participantes entre sí, por lo que los demás participantes podrían ver tu dirección IP.</li>
+    <li>Las llamadas de voz de las salas privadas no se graban. Pasan por un servicio externo de llamadas, por lo que los demás participantes no ven tu dirección IP. Los moderadores pueden sacar a alguien de una llamada. Si pasa algo, usa el botón ⚑ Reportar durante la llamada. Cada persona tiene un tiempo máximo de llamada por día.</li>
     <li>Las cuentas nuevas deben ser aprobadas por un moderador antes de poder entrar.</li>
     <li>Donar es voluntario y no cambia las reglas. Aparecer en la tabla de donantes es opcional.</li>
     <li>Está prohibido: acoso, insultos, odio, amenazas, contenido sexual o violento, estafas, spam, hacerse pasar por otra persona y compartir datos personales (tuyos o de otros).</li>
@@ -599,100 +600,97 @@ function audioBtn(path){
 $('mic').onclick = grabar; $('micX').onclick = () => rec && rec.cancelar();
 
 // ---------- Llamada de voz grupal (solo salas privadas) ----------
-// Conexión directa entre participantes (WebRTC). Supabase solo sirve para avisarse y ver quién está dentro.
-const LLAMADAS_ACTIVAS = false;   // pon true cuando las llamadas tengan moderación y la IP oculta
+// La voz pasa por LiveKit (un servidor de llamadas): los participantes no ven la IP de los demás.
+// Supabase sirve para ver quién está dentro (presencia) y, con la función "llamada", para pedir permiso.
+const LLAMADAS_ACTIVAS = true;
 const MAX_LLAMADA = 6;
-// Para redes estrictas / datos móviles agrega aquí un servidor TURN: { urls: 'turn:TU_SERVIDOR:3478', username: '…', credential: '…' }
-const ICE = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 let call = null;
 
 function mirarLlamada(sala){
   if (!LLAMADAS_ACTIVAS) return;
-  if (call && (call.sala === sala || call.dentro)) return pintarBarra();
+  if (call && (call.sala === sala || call.dentro || call.entrando)) return pintarBarra();
   cerrarCanalLlamada();
-  const c = call = { sala, nombre: salasInfo[sala]?.nombre || 'sala', pcs: new Map(), gente: {}, dentro: false, listo: false, mute: false, stream: null, aviso: '' };
+  const c = call = { sala, nombre: salasInfo[sala]?.nombre || 'sala', gente: {}, dentro: false, entrando: false, listo: false, mute: false,
+    room: null, cont: null, aviso: '', sonido: false, avisoFin: false, t0: 0, horas: null, latido: null };
   c.ch = sb.channel('llamada:' + sala, { config: { private: true, presence: { key: me.id } } });
   c.ch.on('presence', { event: 'sync' }, () => { if (call === c) sincronizar(); })
-    .on('broadcast', { event: 'sig' }, m => { if (call === c) alSenal(m.payload); })
     .subscribe(st => { if (call !== c) return; c.listo = st === 'SUBSCRIBED'; if (st === 'CHANNEL_ERROR' || st === 'TIMED_OUT') c.aviso = 'No se pudo conectar con la llamada.'; pintarBarra(); });
   pintarBarra();
 }
 function limpiarMedios(c){
-  clearInterval(c.horas);
-  c.pcs.forEach(p => { p.pc.onconnectionstatechange = null; p.pc.close(); if (p.audio) p.audio.srcObject = null; }); c.pcs.clear();
-  if (c.stream) c.stream.getTracks().forEach(t => t.stop()); c.stream = null;
+  clearInterval(c.horas); clearInterval(c.latido);
+  const r = c.room; c.room = null; if (r) r.disconnect();
+  if (c.cont) { c.cont.remove(); c.cont = null; }
 }
 function cerrarCanalLlamada(){
   if (!call) return pintarBarra();
-  const c = call; call = null; limpiarMedios(c); sb.removeChannel(c.ch); pintarBarra();
+  const c = call; call = null; c.dentro = false; limpiarMedios(c); sb.removeChannel(c.ch); pintarBarra();
 }
 function sincronizar(){
   const gente = {};
   Object.values(call.ch.presenceState()).forEach(a => a.forEach(m => { if (m.uid) gente[m.uid] = m.ap; }));
-  call.gente = gente;
-  if (call.dentro) {
-    // Entre dos personas ofrece siempre la de id menor: así nunca se cruzan dos ofertas
-    for (const uid of Object.keys(gente)) if (uid !== me.id && !call.pcs.has(uid) && me.id < uid) ofrecer(uid);
-    for (const uid of [...call.pcs.keys()]) if (!gente[uid]) cerrarPeer(uid);
-  }
-  pintarBarra();
+  call.gente = gente; pintarBarra();
 }
-function senal(para, tipo, data){ call.ch.send({ type: 'broadcast', event: 'sig', payload: { de: me.id, para, tipo, data } }); }
-function nuevoPeer(uid){
-  const pc = new RTCPeerConnection(ICE), p = { pc, cola: [], audio: null };
-  call.pcs.set(uid, p);
-  call.stream.getTracks().forEach(t => pc.addTrack(t, call.stream));
-  pc.onicecandidate = e => { if (e.candidate && call) senal(uid, 'ice', e.candidate.toJSON()); };
-  pc.ontrack = e => { if (!p.audio) { p.audio = new Audio(); p.audio.autoplay = true; } p.audio.srcObject = e.streams[0]; p.audio.play().catch(() => {}); };
-  pc.onconnectionstatechange = () => { if (pc.connectionState === 'failed' && call) {
-    call.aviso = 'No se pudo conectar con @' + (call.gente[uid] || '?') + ' (su red puede necesitar un servidor TURN).'; cerrarPeer(uid); pintarBarra(); } };
-  return p;
-}
-function cerrarPeer(uid){
-  const p = call && call.pcs.get(uid); if (!p) return;
-  p.pc.onconnectionstatechange = null; p.pc.close(); if (p.audio) p.audio.srcObject = null; call.pcs.delete(uid);
-}
-async function ofrecer(uid){
-  try { const p = nuevoPeer(uid); await p.pc.setLocalDescription(await p.pc.createOffer()); senal(uid, 'offer', p.pc.localDescription.toJSON()); }
-  catch { cerrarPeer(uid); }
-}
-async function vaciarCola(p){ for (const c of p.cola.splice(0)) await p.pc.addIceCandidate(c).catch(() => {}); }
-async function alSenal(x){
-  if (!call || !call.dentro || !x || x.para !== me.id) return;
-  try {
-    let p = call.pcs.get(x.de);
-    if (x.tipo === 'offer') {
-      if (p) cerrarPeer(x.de);
-      p = nuevoPeer(x.de);
-      await p.pc.setRemoteDescription(x.data); await vaciarCola(p);
-      await p.pc.setLocalDescription(await p.pc.createAnswer()); senal(x.de, 'answer', p.pc.localDescription.toJSON());
-    } else if (x.tipo === 'answer' && p) { await p.pc.setRemoteDescription(x.data); await vaciarCola(p); }
-    else if (x.tipo === 'ice' && p) { if (p.pc.remoteDescription) await p.pc.addIceCandidate(x.data).catch(() => {}); else p.cola.push(x.data); }
-  } catch { cerrarPeer(x.de); }
+async function textoError(error){
+  let m = 'No se pudo entrar a la llamada.';
+  try { const j = await error.context.json(); if (j && j.error) m = j.error; } catch {}
+  return m;
 }
 async function unirseLlamada(){
-  const c = call; if (!c || c.dentro) return;
-  if (!navigator.mediaDevices || !window.RTCPeerConnection) { c.aviso = 'Tu navegador no permite llamadas de voz.'; return pintarBarra(); }
+  const c = call; if (!c || c.dentro || c.entrando) return;
+  if (!window.LivekitClient) { c.aviso = 'No se pudo cargar el sistema de llamadas. Recarga la página.'; return pintarBarra(); }
+  if (!navigator.mediaDevices) { c.aviso = 'Tu navegador no permite llamadas de voz.'; return pintarBarra(); }
   if (!c.listo) { c.aviso = 'Conectando… prueba otra vez en un momento.'; return pintarBarra(); }
   if (Object.keys(c.gente).length >= MAX_LLAMADA) { c.aviso = 'La llamada está llena (máximo ' + MAX_LLAMADA + ').'; return pintarBarra(); }
-  let stream;
-  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
-  catch { c.aviso = 'No se pudo usar el micrófono. Revisa el permiso del navegador.'; return pintarBarra(); }
-  if (call !== c) { stream.getTracks().forEach(t => t.stop()); return; }     // saliste de la sala mientras elegías el permiso
-  c.stream = stream; c.aviso = ''; c.dentro = true; c.mute = false; c.t0 = Date.now();
+  c.entrando = true; c.aviso = ''; pintarBarra();
+  const { data, error } = await sb.functions.invoke('clever-action', { body: { accion: 'entrar', sala: c.sala } });
+  if (call !== c) return;
+  if (error || !data || !data.token) { c.entrando = false; c.aviso = await textoError(error || {}); return pintarBarra(); }
+  const { Room, RoomEvent, Track } = LivekitClient;
+  const room = new Room();
+  c.room = room; c.cont = el('div'); c.cont.style.display = 'none'; document.body.append(c.cont);
+  room.on(RoomEvent.TrackSubscribed, t => { if (t.kind === Track.Kind.Audio && c.cont) c.cont.append(t.attach()); });
+  room.on(RoomEvent.TrackUnsubscribed, t => t.detach().forEach(x => x.remove()));
+  room.on(RoomEvent.AudioPlaybackStatusChanged, () => { if (!room.canPlaybackAudio) { c.sonido = true; pintarBarra(); } });
+  room.on(RoomEvent.Disconnected, () => { if (call === c && c.dentro) salirLlamada('Se cortó tu conexión con la llamada.'); });
+  try {
+    await room.connect(data.url, data.token);
+    await room.localParticipant.setMicrophoneEnabled(true, { echoCancellation: true, noiseSuppression: true, autoGainControl: true });
+  } catch {
+    c.entrando = false; limpiarMedios(c); c.aviso = 'No se pudo conectar. Revisa el permiso del micrófono.'; return pintarBarra();
+  }
+  if (call !== c) { limpiarMedios(c); return; }
+  c.entrando = false; c.dentro = true; c.mute = false; c.aviso = ''; c.avisoFin = false; c.t0 = Date.now();
+  try { await c.ch.track({ uid: me.id, ap: me.apodo }); } catch {}
   c.horas = setInterval(() => { const h = Math.round((Date.now() - c.t0) / 3600000); c.aviso = '⏰ Llevas ' + h + (h === 1 ? ' hora' : ' horas') + ' en la llamada.'; pintarBarra(); }, 3600000);
-  const r = await c.ch.track({ uid: me.id, ap: me.apodo });
-  if (r !== 'ok' && call === c) { c.aviso = 'No se pudo entrar a la llamada.'; c.dentro = false; limpiarMedios(c); }
+  latidoLlamada(c); c.latido = setInterval(() => latidoLlamada(c), 30000);
   pintarBarra();
 }
-async function salirLlamada(){
+// Cada 30 s la base de datos suma el tiempo usado y dice cuánto queda
+async function latidoLlamada(c){
+  const { data } = await sb.rpc('llamada_latido', { s: c.sala });
+  if (call !== c || !c.dentro || !data) return;
+  if (data.mes_agotado) return salirLlamada('Se agotó el cupo mensual de llamadas.');
+  if (data.restante_seg !== null && data.restante_seg <= 0) return salirLlamada('⏱ Se acabó tu tiempo de llamada de hoy.');
+  if (data.restante_seg !== null && data.restante_seg <= 300 && !c.avisoFin) { c.avisoFin = true; c.aviso = '⏱ Te quedan menos de 5 minutos de llamada hoy.'; pintarBarra(); }
+}
+async function salirLlamada(msg){
   const c = call; if (!c || !c.dentro) return;
-  c.dentro = false; c.aviso = ''; limpiarMedios(c);
+  c.dentro = false; c.avisoFin = false; c.sonido = false; c.aviso = typeof msg === 'string' ? msg : ''; limpiarMedios(c);
   try { await c.ch.untrack(); } catch {}
   if (call === c && !(act.t === 'sala' && act.id === c.sala && !act.ro)) cerrarCanalLlamada(); else pintarBarra();
 }
-function alternarMicro(){
-  call.mute = !call.mute; call.stream && call.stream.getAudioTracks().forEach(t => { t.enabled = !call.mute; }); pintarBarra();
+async function alternarMicro(){
+  const c = call; if (!c || !c.room) return;
+  c.mute = !c.mute;
+  try { await c.room.localParticipant.setMicrophoneEnabled(!c.mute); } catch {}
+  pintarBarra();
+}
+async function expulsarDeLlamada(uid, ap){
+  if (!confirm('¿Sacar a @' + ap + ' de la llamada?')) return;
+  const { error } = await sb.functions.invoke('clever-action', { body: { accion: 'expulsar', sala: call.sala, uid } });
+  if (error) return alert(await textoError(error));
+  await log('sacar_de_llamada', '@' + ap, 'sala ' + call.sala);
 }
 async function reportarLlamada(){
   const mot = prompt('¿Qué pasó en la llamada?'); if (!mot) return;
@@ -703,13 +701,19 @@ async function reportarLlamada(){
 function pintarBarra(){
   const b = $('callbar');
   const aqui = call && act.t === 'sala' && !act.ro && act.id === call.sala;
-  if (!call || !(call.dentro || aqui)) { b.classList.add('hide'); return; }
+  if (!call || !(call.dentro || call.entrando || aqui)) { b.classList.add('hide'); return; }
   const nombres = Object.entries(call.gente).map(([u, a]) => '@' + a + (u === me.id ? ' (tú)' : ''));
   b.replaceChildren();
-  if (!call.dentro) b.append(btn(nombres.length ? '📞 En llamada: ' + nombres.join(', ') + ' — toca para unirte' : '📞 Iniciar llamada de voz', 'go', unirseLlamada));
-  else b.append(el('span', '', '🎧 ' + (aqui ? '' : call.nombre + ': ') + nombres.join(', ')),
-    btn(call.mute ? '🔇 Micro apagado' : '🎙 Micro encendido', call.mute ? 'bad' : '', alternarMicro),
-    btn('📴 Salir', 'bad', salirLlamada), btn('⚑ Reportar', '', reportarLlamada));
+  if (!call.dentro) {
+    const bt = btn(call.entrando ? '📞 Conectando…' : nombres.length ? '📞 En llamada: ' + nombres.join(', ') + ' — toca para unirte' : '📞 Iniciar llamada de voz', 'go', unirseLlamada);
+    bt.disabled = call.entrando; b.append(bt);
+  } else {
+    b.append(el('span', '', '🎧 ' + (aqui ? '' : call.nombre + ': ') + nombres.join(', ')),
+      btn(call.mute ? '🔇 Micro apagado' : '🎙 Micro encendido', call.mute ? 'bad' : '', alternarMicro),
+      btn('📴 Salir', 'bad', () => salirLlamada()), btn('⚑ Reportar', '', reportarLlamada));
+    if (call.sonido) b.append(btn('🔊 Activar sonido', 'go', async () => { try { await call.room.startAudio(); } catch {} call.sonido = false; pintarBarra(); }));
+    if (me.es_admin || me.es_moderador) Object.entries(call.gente).forEach(([u, a]) => { if (u !== me.id) b.append(btn('🚪 Sacar a @' + a, 'bad', () => expulsarDeLlamada(u, a))); });
+  }
   if (call.aviso) b.append(el('small', '', call.aviso));
   b.classList.remove('hide');
 }
